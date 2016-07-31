@@ -1,0 +1,18 @@
+<html>
+  <body>
+    <ul>
+      <li><a href="/">Accueil</a></li>
+      <li><a href="afficher_zones">Afficher les zones</a></li>
+    </ul>
+
+    <p>Voici les <% zones.length %> zones:
+    </p>
+    <ul>
+      <%
+       for (var i in zones) {
+	 %> <li> <%= zones[i] %> </li><%
+       }
+      %>
+    </ul>
+  </body>
+</html>
