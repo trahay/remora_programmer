@@ -1,0 +1,4 @@
+sudo apt-get install npm nodejs nodejs-dev
+
+npm install ejs
+npm install express
