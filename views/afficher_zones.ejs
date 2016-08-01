@@ -8,11 +8,35 @@
     <p>Voici les <% zones.length %> zones:
     </p>
     <ul>
-      <%
-       for (var i in zones) {
-	 %> <li> <%= zones[i] %> </li><%
-       }
-      %>
+	<%
+	for(i in zones){
+	    if(zones[i]._status == "OK") {
+	%>
+	<li> <%= zones[i]._name %> -
+	    PIN1=<%= zones[i]._pin1 %> -
+	    PIN2=<%= zones[i]._pin2 %>
+	</li>
+        <%
+	} else {
+	%>
+	<li> configuration problem :
+	    <%= zones[i]._name %> -
+	    PIN1=<%= zones[i]._pin1 %> -
+	    PIN2=<%= zones[i]._pin2 %>
+	</li>
+        <%
+	}
+	}
+	%>
     </ul>
+
+    <h1> Ajouter une zone</h1>
+ <form method="post" action="ajouter_zone">
+     Zone Name: <input type="text" name="zone_name"><br>
+     PIN1: <input type="text" name="pin1"><br>
+     PIN2: <input type="text" name="pin2"><br>
+  <input type="submit" value="Submit">
+ </form>
+
   </body>
 </html>
