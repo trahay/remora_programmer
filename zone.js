@@ -9,13 +9,20 @@ function getConfigField(file, field) {
     return result;
 }
 
+function print_zone(zone) {
+    console.log("Zone name: '"+zone._name+"'");
+    console.log("Zone PIN1: '"+zone._pin1+"'");
+    console.log("Zone PIN2: '"+zone._pin2+"'");
+}
+
 var Zone = function(dir, filename) {
     this._filename=filename;
     this._full_path=dir+"/"+filename;
     this._name = filename;
     this._status="OK";
 
-    this._name = getConfigField(this._full_path, "Zone_Name");
+    this._name = getConfigField(this._full_path, "Zone_Name").toString();
+    this._name= this._name.replace(/\n/g, "");
     this._pin1=parseInt(getConfigField(this._full_path, "PIN1"));
     if(isNaN(this._pin1)) {
 	this._status = "KO";
@@ -41,9 +48,12 @@ exports.getZones = function(dir, files_) {
     return files_;
 }
 
-function searchZone(zone_name) {
+exports.searchZone = function(zone_name) {
+    console.log("Searching for "+zone_name);
     var zones = exports.getZones();
     for( var i in zones ){
+	//console.log("cmp "+zones[i]._name+", "+zone_name);
+	print_zone(zones[i]);
 	if(zones[i]._name == zone_name) {
 	    return zones[i];
 	}
@@ -72,15 +82,6 @@ exports.addZone = function(zone_name, pin1, pin2) {
     if(isNaN(p1) || isNaN(p2)) {
 	console.log("pin1 ou pin2 NaN!");
 	return;
-    }
-
-    // check if the zone already exists
-    var zone = searchZone(zone_name);
-    if(zone) {
-	if(zone._status=="OK") {
-	    console.log("La zone "+zone_name+" existe deja!");
-	    return;
-	}
     }
 
     exports.createZone("zones/"+zone_name, zone_name, p1, p2);

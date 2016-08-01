@@ -1,45 +1,52 @@
 <html>
+  <head>
+    <% include ../partials/head %>
+  </head>
   <body>
-    <ul>
-      <li><a href="/">Accueil</a></li>
-      <li><a href="afficher_zones">Afficher les zones</a></li>
-    </ul>
+    <header>
+      <% include ../partials/header %>
+    </header>
 
     <p>Voici les <% zones.length %> zones:
     </p>
     <ul>
-	<%
-	for(i in zones){
-	%>
-	<li>
-	    <%= zones[i]._filename %> -
-	    <%
-	    if(zones[i]._status == "OK") {
-	    %>
-	    <%= zones[i]._name %> -
-	    PIN1=<%= zones[i]._pin1 %> -
-	    PIN2=<%= zones[i]._pin2 %>
-        <%
-	} else {
-	%>
-	 configuration problem :
-	    <%= zones[i]._name %> -
-	    PIN1=<%= zones[i]._pin1 %> -
-	    PIN2=<%= zones[i]._pin2 %>
-        <%
-	}
-	%></li> <%
-	}
-	%>
+      <% for(i in zones){ %>
+      <li>
+	<a href="edit_zones?name=<%= zones[i]._name %>">Edit</a>
+	<% if(zones[i]._status != "OK") { %>
+	configuration problem  -
+	<% } %>
+	<%= zones[i]._filename %> -
+	<%= zones[i]._name %> -
+	PIN1=<%= zones[i]._pin1 %> -
+	PIN2=<%= zones[i]._pin2 %>
+      </li>
+      <% } %>
     </ul>
 
     <h1> Ajouter une zone</h1>
- <form method="post" action="ajouter_zone">
-     Zone Name: <input type="text" name="zone_name"><br>
-     PIN1: <input type="text" name="pin1"><br>
-     PIN2: <input type="text" name="pin2"><br>
-  <input type="submit" value="Submit">
- </form>
+    <form method="post" action="ajouter_zone">
+      Zone Name: <input type="text" name="zone_name"
+			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
+			value="<%= selected_zone._name %>"
+			<% } %>
+			>
+      <br>
+      PIN1: <input type="text" name="pin1"
+			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
+			value="<%= selected_zone._pin1 %>"
+			<% } %>
+		   ><br>
+      PIN2: <input type="text" name="pin2"
+		   <% if(typeof selected_zone != 'undefined' && selected_zone) { %>
+		   value="<%= selected_zone._pin2 %>"
+		   <% } %>
+		   ><br>
+      <input type="submit" value="Submit">
+    </form>
 
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
   </body>
 </html>
