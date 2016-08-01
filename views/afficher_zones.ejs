@@ -10,22 +10,25 @@
     <ul>
 	<%
 	for(i in zones){
+	%>
+	<li>
+	    <%= zones[i]._filename %> -
+	    <%
 	    if(zones[i]._status == "OK") {
-	%>
-	<li> <%= zones[i]._name %> -
-	    PIN1=<%= zones[i]._pin1 %> -
-	    PIN2=<%= zones[i]._pin2 %>
-	</li>
-        <%
-	} else {
-	%>
-	<li> configuration problem :
+	    %>
 	    <%= zones[i]._name %> -
 	    PIN1=<%= zones[i]._pin1 %> -
 	    PIN2=<%= zones[i]._pin2 %>
-	</li>
+        <%
+	} else {
+	%>
+	 configuration problem :
+	    <%= zones[i]._name %> -
+	    PIN1=<%= zones[i]._pin1 %> -
+	    PIN2=<%= zones[i]._pin2 %>
         <%
 	}
+	%></li> <%
 	}
 	%>
     </ul>

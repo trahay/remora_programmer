@@ -9,12 +9,16 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
-
 app.get('/', function(req, res) {
     res.render('index.ejs');
 });
 
+
+function getConfigField(file, field) {
+    var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
+    var result = exec(cmd);
+    return result;
+}
 
 var Zone = function(dir, filename) {
     this._filename=filename;
@@ -22,14 +26,12 @@ var Zone = function(dir, filename) {
     this._name = filename;
     this._status="OK";
 
-    var cmd='grep "^PIN1=" '+ this._full_path+' | sed \'s/PIN1=//\'';
-    this._pin1=parseInt(exec(cmd));
+    this._name = getConfigField(this._full_path, "Zone_Name");
+    this._pin1=parseInt(getConfigField(this._full_path, "PIN1"));
     if(isNaN(this._pin1)) {
 	this._status = "KO";
     }
-
-    var cmd='grep "^PIN2=" '+ this._full_path+' | sed \'s/PIN2=//\'';
-    this._pin2=parseInt(exec(cmd));
+    this._pin2=parseInt(getConfigField(this._full_path, "PIN2"));
     if(isNaN(this._pin2)) {
 	this._status = "KO";
     }
@@ -60,18 +62,39 @@ function searchZone(zone_name) {
     return null;
 }
 
+function createZone(filename, zone_name, pin1, pin2) {
+    filename = filename.replace(/ /g, "_");
+    console.log("Writing file "+filename);;
+    var ws = fs.createWriteStream(filename);
+    ws.write("Zone_Name="+zone_name+"\n");
+    ws.write("PIN1="+pin1+"\n");
+    ws.write("PIN2="+pin2+"\n");
+    ws.end();
+}
+
 function addZone(zone_name, pin1, pin2) {
+    // check if parameters are filled correctly
+    if(zone_name =="") {
+	console.log("zone_name='"+zone_name+"' !");
+	return;
+    }
+    var p1=parseInt(pin1);
+    var p2=parseInt(pin2);
+    if(isNaN(p1) || isNaN(p2)) {
+	console.log("pin1 ou pin2 NaN!");
+	return;
+    }
+
+    // check if the zone already exists
     var zone = searchZone(zone_name);
     if(zone) {
 	if(zone._status=="OK") {
 	    console.log("La zone "+zone_name+" existe deja!");
 	    return;
-	} else {
-	    console.log("La zone "+zone_name+" existe deja, mais est mal configurée!");
 	}
-    } else {
-	console.log("La zone "+zone_name+" n'existe pas");
     }
+
+    createZone("zones/"+zone_name, zone_name, p1, p2);
 }
 
 app.post('/ajouter_zone', function(request, res){
