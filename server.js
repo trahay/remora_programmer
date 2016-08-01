@@ -1,9 +1,14 @@
+var auth = require('./auth');
 var express = require('express');
 var url=require('url');
-var app = express();
 var fs = require('fs');
 var exec = require('child_process').execSync;
 var bodyParser  = require('body-parser');
+var app = express();
+
+app.use(auth);
+
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
