@@ -12,7 +12,8 @@
     <ul>
       <% for(i in zones){ %>
       <li>
-	<a href="edit_zones?name=<%= zones[i]._name %>">Edit</a>
+	<a href="edit_zones?name=<%= zones[i]._name %>">Editer</a>
+	<a href="supprime_zone?name=<%= zones[i]._name %>">Supprimer</a>
 	<% if(zones[i]._status != "OK") { %>
 	configuration problem  -
 	<% } %>

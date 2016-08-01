@@ -71,6 +71,14 @@ exports.createZone = function(filename, zone_name, pin1, pin2) {
     ws.end();
 }
 
+exports.deleteZone = function(zone_name) {
+    var zone = exports.searchZone(zone_name);
+    if(zone != null) {
+	console.log("rm "+zone._full_path);
+	fs.unlinkSync(zone._full_path);
+    }
+}
+
 exports.addZone = function(zone_name, pin1, pin2) {
     // check if parameters are filled correctly
     if(zone_name =="") {

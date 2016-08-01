@@ -30,6 +30,14 @@ app.post('/ajouter_zone', function(request, res){
     res.redirect('/afficher_zones');
 });
 
+app.get('/supprime_zone', function(req, res) {
+    var zone_name = req.query.name;
+    console.log("delete zone = "+zone_name);
+    zone.deleteZone(zone_name);
+
+    res.redirect('/afficher_zones');
+});
+
 app.get('/edit_zones', function(req, res) {
     var zone_name = req.query.name;
     var selected_zone = zone.searchZone(zone_name);
