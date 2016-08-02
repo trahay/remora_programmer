@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <% include ../partials/head %>
+    <style>
+      .color_0 {
+      background-color: red;
+      }
+      .color_1 {
+      background-color: orange;
+      }
+      .color_2 {
+      background-color: yellow;
+      }
+      .color_3{
+      background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+
+    <p>Voici les <% progs.length %> programmes:
+    </p>
+      <% for(i in progs) { %>
+      <% if(progs[i]._status != "OK") { %>
+	  configuration problem :
+	  <% }  %>
+
+	  <%= progs[i]._filename %> -
+	  <%= progs[i]._name %>  -
+	  PROGRAM=<%= String.fromCharCode(progs[i]._program[3]) %>
+	<table  cellspacing=0>
+	  <tr>
+	    <% for(j=0; j<24; j++) { %>
+	       <th colspan="4"> <%= j %> </th>
+	       <% } %>
+	  </tr>
+	  <tr>
+	    <% for(j=0; j<24*4; j++) { %>
+	       <td class="color_<%= String.fromCharCode(progs[i]._program[j]) %>">&nbsp;</td>
+	    <% } %>
+	  </tr>
+	  </table>
+	<% } %>
+    <h1> Ajouter un programme</h1>
+ <form method="post" action="ajouter_prog">
+     Zone Name: <input type="text" name="zone_name"><br>
+     PIN1: <input type="text" name="pin1"><br>
+     PIN2: <input type="text" name="pin2"><br>
+  <input type="submit" value="Submit">
+ </form>
+
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>
