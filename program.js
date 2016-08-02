@@ -7,7 +7,7 @@ var exports = module.exports = {};
 function getConfigField(file, field) {
     var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
     var result = exec(cmd);
-    return result;
+    return result.toString();
 }
 
 function printProgram(prog) {
@@ -21,6 +21,7 @@ var Program = function(dir, filename) {
     this._status = "OK";
     this._name = getConfigField(this._full_path, "Program_Name");
     if(this._name == "") { this._status = "KO";}
+    this._name= this._name.replace(/\n/g, "");
     this._program = getConfigField(this._full_path, "Program");
     if(this._program == "") { this._status = "KO";}
 };
@@ -42,14 +43,24 @@ exports.getPrograms = function(dir, files_) {
     return files_;
 }
 
-function searchProgram(prog_name) {
+exports.searchProgram = function(prog_name) {
     var programs = exports.getPrograms();
+    console.log("Searching for program '"+prog_name+"'");
     for( var i in programs ){
+	console.log("cmp '"+programs[i]._name+"', '"+prog_name+"'");
 	if(programs[i]._name == prog_name) {
 	    return programs[i];
 	}
     }
     return null;
+}
+
+exports.deleteProg = function(prog_name) {
+    var prog = exports.searchProgram(prog_name);
+    if(prog != null) {
+	console.log("rm "+prog._full_path);
+	fs.unlinkSync(prog._full_path);
+    }
 }
 
 //exports.createProgram = function(filename, zone_name, pin1, pin2) {

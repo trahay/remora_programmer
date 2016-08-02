@@ -24,13 +24,16 @@
     <p>Voici les <% progs.length %> programmes:
     </p>
       <% for(i in progs) { %>
+
+      <a href="edit_prog?name=<%= progs[i]._name %>">Editer</a>
+      <a href="supprime_prog?name=<%= progs[i]._name %>">Supprimer</a>
       <% if(progs[i]._status != "OK") { %>
 	  configuration problem :
 	  <% }  %>
 
 	  <%= progs[i]._filename %> -
 	  <%= progs[i]._name %>  -
-	  PROGRAM=<%= String.fromCharCode(progs[i]._program[3]) %>
+	  PROGRAM=
 	<table  cellspacing=0>
 	  <tr>
 	    <% for(j=0; j<24; j++) { %>
@@ -39,16 +42,27 @@
 	  </tr>
 	  <tr>
 	    <% for(j=0; j<24*4; j++) { %>
-	       <td class="color_<%= String.fromCharCode(progs[i]._program[j]) %>">&nbsp;</td>
+	       <td class="color_<%= progs[i]._program[j] %>">&nbsp;</td>
 	    <% } %>
 	  </tr>
 	  </table>
 	<% } %>
-    <h1> Ajouter un programme</h1>
+
+	<h1> Ajouter un programme</h1>
  <form method="post" action="ajouter_prog">
-     Zone Name: <input type="text" name="zone_name"><br>
-     PIN1: <input type="text" name="pin1"><br>
-     PIN2: <input type="text" name="pin2"><br>
+   Nom du programme: <input type="text" name="prog_name"
+			    <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
+			value="<%= selected_prog._name %>"
+			<% } %> /><br/>
+     Heure début (hh:mm): <input type="text" name="heure_debut" maxlength="5" /><br/>
+     Heure fin (hh:mm): <input type="text" name="heure_fin" maxlength="5" /><br/>
+     mode:
+     <select name="mode">
+       <option value="Arret">Arrêt</option>
+       <option value="Hors-gel">Hors-gel</option>
+       <option value="Eco">Eco</option>
+       <option value="Confort">Confort</option>
+     </select>
   <input type="submit" value="Submit">
  </form>
 
