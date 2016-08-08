@@ -53,17 +53,17 @@ app.get('/afficher_zones', function(req, res) {
     res.render('afficher_zones.ejs', {zones: zones});
 });
 
-app.post('/ajouter_prog', function(request, res){
-/*
-    var zone_name=request.body.zone_name;
-    var pin1=request.body.pin1;
-    var pin2=request.body.pin2;
+function ajouter_prog(req, res){
+    var prog_name=req.body.prog_name;
+    var heure_debut=req.body.heure_debut;
+    var heure_fin=req.body.heure_fin;
+    var mode=req.body.mode;
 
-    console.log("Nouvelle zone: "+zone_name+ " - pin1="+pin1+ "- pin2="+pin2);
-    zone.addZone(zone_name, pin1, pin2);
-    res.redirect('/afficher_zones');
-*/
-});
+    console.log("Nouveau programm: "+prog_name+ " - "+heure_debut+ "- "+heure_fin+" - "+ mode);
+    program.addProg(prog_name, heure_debut, heure_fin, mode);
+    req.selected_prog = program.searchProgram(prog_name);
+    return afficher_programs(req, res);
+}
 
 
 function supprime_prog(req, res) {
@@ -89,6 +89,7 @@ function afficher_programs(req, res) {
     res.render('afficher_programs.ejs', {progs: progs, selected_prog:selected_prog});
 }
 
+app.post('/ajouter_prog', ajouter_prog);
 app.get('/supprime_prog', supprime_prog);
 app.get('/edit_prog', edit_prog);
 app.get('/afficher_programs', afficher_programs);

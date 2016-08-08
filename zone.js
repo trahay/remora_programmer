@@ -5,7 +5,9 @@ var exports = module.exports = {};
 
 function getConfigField(file, field) {
     var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
+    console.log("exec("+cmd+")");
     var result = exec(cmd);
+    console.log("Result : "+result.toString());
     return result;
 }
 
