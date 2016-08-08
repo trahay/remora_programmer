@@ -58,8 +58,6 @@ function ajouter_prog(req, res){
     var heure_debut=req.body.heure_debut;
     var heure_fin=req.body.heure_fin;
     var mode=req.body.mode;
-
-    console.log("Nouveau programm: "+prog_name+ " - "+heure_debut+ "- "+heure_fin+" - "+ mode);
     program.addProg(prog_name, heure_debut, heure_fin, mode);
     req.selected_prog = program.searchProgram(prog_name);
     return afficher_programs(req, res);
@@ -77,8 +75,10 @@ function supprime_prog(req, res) {
 function edit_prog(req, res) {
     var prog_name = req.query.name;
     req.selected_prog = program.searchProgram(prog_name);
+    if(! req.selected_prog) {
+	console.log("Cannot find program '"+prog_name+"'");
+    }
     console.log("Edit Program name = "+req.selected_prog._name);
-
     return afficher_programs(req, res);
 }
 
