@@ -3,6 +3,7 @@ var express = require('express');
 var url=require('url');
 var bodyParser  = require('body-parser');
 var app = express();
+var util = require('util');
 
 app.use(auth);
 
@@ -86,7 +87,7 @@ function afficher_programs(req, res) {
     var selected_prog=req.selected_prog;
     var progs=program.getPrograms();
     var nb_progs=progs.length;
-    res.render('afficher_programs.ejs', {progs: progs, selected_prog:selected_prog});
+    res.render('afficher_programs.ejs', {progs: progs, selected_prog:selected_prog, util:util});
 }
 
 app.post('/ajouter_prog', ajouter_prog);

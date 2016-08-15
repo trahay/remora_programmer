@@ -54,8 +54,27 @@
 			    <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
 			value="<%= selected_prog._name %>"
 			<% } %> /><br/>
-     Heure début (hh:mm): <input type="text" name="heure_debut" maxlength="5" /><br/>
-     Heure fin (hh:mm): <input type="text" name="heure_fin" maxlength="5" /><br/>
+Heure début :
+<select name="heure_debut">
+  <%
+     for(var h=0; h<24; h++) {
+        for(var m=0; m<60; m+=15) { %>
+  <option value="<%= h %>:<%= m %>"><%= h<10?util.format('0%d', h):h %>:<%= m<10?util.format('0%d', m):m %></option>
+  <%    }
+	} %>
+    <option value="24:00">24:00</option>
+</select>
+Heure fin:
+<select name="heure_fin">
+  <%
+     for(var h=0; h<24; h++) {
+        for(var m=0; m<60; m+=15) { %>
+  <option value="<%= h %>:<%= m %>"><%= h<10?util.format('0%d', h):h %>:<%= m<10?util.format('0%d', m):m %></option>
+  <%    }
+     } %>
+  <option value="24:00" selected>24:00</option>
+</select>
+
      mode:
      <select name="mode">
        <option value="Arret">Arrêt</option>
