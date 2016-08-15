@@ -9,6 +9,7 @@ app.use(auth);
 
 var zone=require('./zone');
 var program=require('./program');
+var program_sem=require('./program_sem');
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -88,12 +89,59 @@ function afficher_programs(req, res) {
     var progs=program.getPrograms();
     var nb_progs=progs.length;
     res.render('afficher_programs.ejs', {progs: progs, selected_prog:selected_prog, util:util});
+ }
+
+
+function ajouter_prog_sem(req, res){
+/*
+    var prog_name=req.body.prog_name;
+    var heure_debut=req.body.heure_debut;
+    var heure_fin=req.body.heure_fin;
+    var mode=req.body.mode;
+    program.addProg(prog_name, heure_debut, heure_fin, mode);
+    req.selected_prog = program.searchProgram(prog_name);
+*/
+    return afficher_program_sem(req, res);
+}
+
+
+function supprime_prog_sem(req, res) {
+/*
+    var prog_name = req.query.name;
+    console.log("delete prog = "+prog_name);
+    program.deleteProg(prog_name);
+*/
+    return afficher_program_sem(req, res);
+}
+
+function edit_prog_sem(req, res) {
+/*
+    var prog_name = req.query.name;
+    req.selected_prog = program.searchProgram(prog_name);
+    if(! req.selected_prog) {
+	console.log("Cannot find program '"+prog_name+"'");
+    }
+    console.log("Edit Program name = "+req.selected_prog._name);
+*/
+    return afficher_program_sem(req, res);
+}
+
+function afficher_program_sem(req, res) {
+    var selected_prog=req.selected_prog;
+    var progs=program_sem.getProgramSem();
+    var nb_progs=progs.length;
+    res.render('afficher_program_sem.ejs', {progs: progs, selected_prog:selected_prog, util:util});
 }
 
 app.post('/ajouter_prog', ajouter_prog);
 app.get('/supprime_prog', supprime_prog);
 app.get('/edit_prog', edit_prog);
 app.get('/afficher_programs', afficher_programs);
+
+app.post('/ajouter_prog_sem', ajouter_prog_sem);
+app.get('/supprime_prog_sem', supprime_prog_sem);
+app.get('/edit_prog_sem', edit_prog_sem);
+app.get('/program_semaine', afficher_program_sem);
 
 app.use(function(req, res, next){
     var page = url.parse(req.url).pathname;

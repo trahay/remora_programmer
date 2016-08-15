@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <% include ../partials/head %>
+    <style>
+      .color_0 {
+      background-color: red;
+      }
+      .color_1 {
+      background-color: orange;
+      }
+      .color_2 {
+      background-color: yellow;
+      }
+      .color_3{
+      background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+
+    <p>Voici les <% progs.length %> programmes:
+    </p>
+      <% for(i in progs) { %>
+
+      <a href="edit_prog_sem?name=<%= progs[i]._name %>">Editer</a>
+      <a href="supprime_prog_sem?name=<%= progs[i]._name %>">Supprimer</a>
+      <% if(progs[i]._status != "OK") { %>
+	  configuration problem :
+	  <% }  %>
+
+	  <%= progs[i]._filename %> -
+	  <%= progs[i]._name %>  -
+	  PROGRAM=
+
+	<table  cellspacing=0>
+	  <tr>
+	    <th>lundi</th>
+	    <th>mardi</th>
+	    <th>mercredi</th>
+	    <th>jeudi</th>
+	    <th>vendredi</th>
+	    <th>samedi</th>
+	    <th>dimanche</th>
+	  </tr>
+	  <tr>
+	    <% for(j=0; j<7; j++) { %>
+	       <td class="color_<%= progs[i]._program[j] %>"><%= progs[i]._program[j] %>&nbsp;</td>
+	    <% } %>
+	  </tr>
+	  </table>
+
+	  </tr>
+	  </table>
+	<% } %>
+
+	<h1> Ajouter un programme</h1>
+ <form method="post" action="ajouter_prog_sem">
+   Nom du programme: <input type="text" name="prog_name"
+    <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
+			value="<%= selected_prog._name %>"
+			<% } %> /><br/>
+
+    <% for(jour in ["lundi","mardi","mercredi","jeudi","vendredi","samedi", "dimanche"] ) { %>
+			       <%= jour %>
+<select name="<%= jour %>">
+  <% for(var h=0; h<24; h++) {
+        for(var m=0; m<60; m+=15) { %>
+  <option value="<%= h %>:<%= m %>"><%= h<10?util.format('0%d', h):h %>:<%= m<10?util.format('0%d', m):m %></option>
+  <%    }
+	} %>
+    <option value="24:00">24:00</option>
+</select>
+<% } %>
+  <input type="submit" value="Submit">
+ </form>
+
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>
