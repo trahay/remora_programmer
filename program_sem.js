@@ -8,9 +8,7 @@ var jours=["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanch
 
 function getConfigField(file, field) {
     var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
-//    console.log("exec("+cmd+")");
     var result = exec(cmd);
-//    console.log("Result : "+result.toString());
     return result.toString();
 }
 
@@ -20,6 +18,10 @@ function printProgramSem(prog) {
     console.log("Program: '"+prog._program.join(", ")+"'");
 }
 
+function sanitize(string) {
+    return string.replace(/\n/g, "").replace(/ /g, "_");
+}
+
 var ProgramSem = function(dir, filename) {
     this._filename = filename;
     this._full_path=dir+"/"+filename;
@@ -27,19 +29,21 @@ var ProgramSem = function(dir, filename) {
     this._status = "OK";
     this._name = getConfigField(this._full_path, "Program_Name");
     if(this._name == "") { this._status = "KO";}
-    this._name= this._name.replace(/\n/g, "");
+    this._name= sanitize(this._name);
+    this._program=["", "", "", "", "", "", ""];
     for(var i=0; i<7; i++) {
 	this._program[i] = getConfigField(this._full_path, "Program_"+jours[i]);
 	if(this._program[i] == "") { this._status = "KO";}
+	this._program[i] = sanitize(this._program[i]);
     }
 };
 
 exports.createProgramSem = function(filename, p) {
     filename = filename.replace(/ /g, "_");
-    console.log("Writing file "+filename);;
+    console.log("Writing file "+filename);
     fs.writeFileSync(filename, "Program_Name="+p._name+"\n");
     for(var i=0; i<7; i++) {
-	fs.appendFileSync(filename, "Program_"+jours[i]+"="+p[i]+"\n");
+	fs.appendFileSync(filename, "Program_"+jours[i]+"="+p._program[i]+"\n");
     }
 }
 
@@ -90,6 +94,8 @@ exports.addProgSem = function(prog_name, program) {
 	if(! p) {
 	    console.log("Le programme "+program[i]+" n'existe pas !");
 	    return;
+	} else {
+	    console.log("Le programme "+program[i]+" existe !");
 	}
     }
 
@@ -102,15 +108,12 @@ exports.addProgSem = function(prog_name, program) {
     } else {
 	p = new ProgramSem("program_sem", prog_name);
 	p._name=prog_name;
-	p._program=new Array(7);
-	for(var i=0; i<7;i++) {
-	    p._program[i]="";
-	}
-
+	p._program=["", "", "", "", "", "", ""];
 	p._status="OK";
     }
+
     for(var i=0; i<7; i++) {
 	p._program[i]=program[i];
     }
-    exports.createProgramSem("programs/"+prog_name, p);
+    exports.createProgramSem("program_sem/"+prog_name, p);
 }

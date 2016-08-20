@@ -63,17 +63,26 @@
 			value="<%= selected_prog._name %>"
 			<% } %> /><br/>
 
-    <% for(jour in ["lundi","mardi","mercredi","jeudi","vendredi","samedi", "dimanche"] ) { %>
-			       <%= jour %>
-<select name="<%= jour %>">
-  <% for(var h=0; h<24; h++) {
-        for(var m=0; m<60; m+=15) { %>
-  <option value="<%= h %>:<%= m %>"><%= h<10?util.format('0%d', h):h %>:<%= m<10?util.format('0%d', m):m %></option>
-  <%    }
-	} %>
-    <option value="24:00">24:00</option>
-</select>
-<% } %>
+    <%
+       var liste_jours=["lundi","mardi","mercredi","jeudi","vendredi","samedi", "dimanche"];
+       for(j in liste_jours  ) { %>
+    <%= liste_jours[j] %>
+<select name="<%= liste_jours[j] %>">
+  <% for(var i in progs_jour) { %>
+  <option value="<%= progs_jour[i]._name %>"
+	  <% if(typeof selected_prog != 'undefined' && selected_prog) {
+	     console.log("selected_prog._program["+j+"] = "+selected_prog._program[j]);
+	     console.log("\t"+selected_prog._program[j] + " ?= "+progs_jour[i]._name);
+	     if(selected_prog._program[j] === progs_jour[i]._name) {
+	     console.log("\t\tOui !");
+	     %>
+			selected
+	  <% }
+	     } %>
+     ><%= progs_jour[i]._name %></option>
+  <%    } %>
+</select><br/>
+<% } %> 
   <input type="submit" value="Submit">
  </form>
 
