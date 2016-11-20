@@ -47,7 +47,9 @@
 	  </tr>
 	  <tr>
 	    <% for(j=0; j<7; j++) { %>
-	       <td class="color_<%= progs[i]._program[j] %>"><%= progs[i]._program[j] %>&nbsp;</td>
+	       <td class="color_<%= progs[i]._program[j] %>">
+		 <a href="edit_prog?name=<%= progs[i]._program[j] %>"><%= progs[i]._program[j] %></a>&nbsp;
+	       </td>
 	    <% } %>
 	  </tr>
 	  </table>
@@ -71,10 +73,7 @@
   <% for(var i in progs_jour) { %>
   <option value="<%= progs_jour[i]._name %>"
 	  <% if(typeof selected_prog != 'undefined' && selected_prog) {
-	     console.log("selected_prog._program["+j+"] = "+selected_prog._program[j]);
-	     console.log("\t"+selected_prog._program[j] + " ?= "+progs_jour[i]._name);
 	     if(selected_prog._program[j] === progs_jour[i]._name) {
-	     console.log("\t\tOui !");
 	     %>
 			selected
 	  <% }

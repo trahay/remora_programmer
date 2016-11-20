@@ -9,6 +9,20 @@
 
 
     INDEX
+    <p>
+      <%= today %>
+    </p>
+
+    <ul>
+      <% for(i in zones){ %>
+      <li>
+	<a href="edit_zones?name=<%= zones[i]._name %>"><%= zones[i]._name %></a> -
+	<a href="edit_prog?name=<%= zones[i]._current_program %>"><%= zones[i]._current_program %></a> -
+	<a href="edit_prog_sem?name=<%= zones[i]._current_program_sem %>"><%= zones[i]._current_program_sem %></a> -
+	<span class="color_<%= zones[i]._current_mode %>"><%= zones[i]._current_mode %>&nbsp;</span>
+      </li>
+      <% } %>
+    </ul>
 
     <footer>
       <% include ../partials/footer %>

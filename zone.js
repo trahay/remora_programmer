@@ -2,12 +2,12 @@ var exec = require('child_process').execSync;
 var fs = require('fs');
 
 var exports = module.exports = {};
+var progSem=require('./program_sem');
+var progs=require('./program');
 
 function getConfigField(file, field) {
     var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
-//    console.log("exec("+cmd+")");
     var result = exec(cmd);
-//    console.log("Result : "+result.toString());
     return result;
 }
 
@@ -36,6 +36,10 @@ var Zone = function(dir, filename) {
     }
     this._program = getConfigField(this._full_path, "Program").toString();
     this._program= this._program.replace(/\n/g, "");
+    this._current_program_sem=this._program;;
+    var prog=progSem.getTodaysProgram(this._current_program_sem);
+    this._current_program=prog;
+    this._current_mode=progs.getCurrentProgram(prog);
 };
 
 exports.getZones = function(dir, files_) {
@@ -54,13 +58,10 @@ exports.getZones = function(dir, files_) {
 }
 
 exports.searchZone = function(zone_name) {
-//    console.log("Searching for "+zone_name);
     var zones = exports.getZones();
     for( var i in zones ){
-//	console.log("cmp '"+zones[i]._name+"', '"+zone_name+"'");
 	print_zone(zones[i]);
 	if(zones[i]._name == zone_name) {
-//	    console.log("-> Trouve !");
 	    return zones[i];
 	}
     }
@@ -89,13 +90,13 @@ exports.deleteZone = function(zone_name) {
 exports.addZone = function(zone_name, pin1, pin2, program) {
     // check if parameters are filled correctly
     if(zone_name =="") {
-	console.log("zone_name='"+zone_name+"' !");
+	console.log("[addZone] zone_name='"+zone_name+"' !");
 	return;
     }
     var p1=parseInt(pin1);
     var p2=parseInt(pin2);
     if(isNaN(p1) || isNaN(p2)) {
-	console.log("pin1 ou pin2 NaN!");
+	console.log("[addZone] pin1 ou pin2 NaN!");
 	return;
     }
 

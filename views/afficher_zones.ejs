@@ -21,7 +21,7 @@
 	<%= zones[i]._name %> -
 	PIN1 = <%= zones[i]._pin1 %> -
 	PIN2 = <%= zones[i]._pin2 %> -
-	Program = <%= zones[i]._program %>
+	Program = <a href="edit_prog_sem?name=<%= zones[i]._program %>"><%= zones[i]._program %></a>
       </li>
       <% } %>
     </ul>

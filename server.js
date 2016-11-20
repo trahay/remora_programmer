@@ -17,15 +17,19 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-app.get('/', function(req, res) {
-    res.render('index.ejs');
-});
-
-
 function sanitize(string) {
     return string.replace(/ /g, "_");
 }
 
+
+function index(req, res) {
+    var d=new Date().toISOString().
+	replace(/T/, ' ').      // replace T with a space
+	replace(/\..+/, '')     // delete the dot and everything after
+
+    var zones=zone.getZones();
+    res.render('index.ejs', {today:d, zones:zones});
+}
 
 function ajouter_zone(req, res){
     var zone_name=sanitize(req.body.zone_name);
@@ -33,7 +37,7 @@ function ajouter_zone(req, res){
     var pin2=req.body.pin2;
     var program=req.body.program;
 
-    console.log("Nouvelle zone: "+zone_name+ " - pin1="+pin1+ " - pin2="+pin2+" - program="+program);
+    console.log("add zone: "+zone_name+ " - pin1="+pin1+ " - pin2="+pin2+" - program="+program);
     zone.addZone(zone_name, pin1, pin2, program);
     req.selected_zone=zone;
     return afficher_zones(req, res);
@@ -107,7 +111,6 @@ function afficher_programs(req, res) {
 
 function ajouter_prog_sem(req, res){
     var prog_name=sanitize(req.body.prog_name);
-    console.log("new prog: "+prog_name);
     var prog = [req.body.lundi,
 		req.body.mardi,
 		req.body.mercredi,
@@ -152,6 +155,8 @@ function afficher_program_sem(req, res) {
 
     res.render('afficher_program_sem.ejs', {progs: progs, selected_prog:selected_prog, util:util, progs_jour:progs_jour, nb_progs_jour:nb_progs_jour});
 }
+
+app.get('/', index);
 
 app.post('/ajouter_zone', ajouter_zone);
 app.get('/supprime_zone', supprime_zone);

@@ -91,30 +91,38 @@ function Heure(heure) {
     this.pos=parseInt(this.h*4+(this.m/15));
 }
 
+exports.getCurrentProgram = function(prog_name) {
+    var prog = exports.searchProgram(prog_name);
+    if(prog != null) {
+	var h = new Date().getHours();
+	var m = new Date().getMinutes();
+	var heure_str=h+":"+m;
+	var heure = new Heure(heure_str);
+	return prog._program[heure.pos];
+    }
+    return null;
+}
+
 exports.addProg = function(prog_name, heure_debut, heure_fin, mode) {
     // check if parameters are filled correctly
     if(prog_name =="") {
- 	console.log("prog_name='"+prog_name+"' !");
+ 	console.log("[addProg] prog_name='"+prog_name+"' !");
  	return;
     }
     var h_debut=new Heure(heure_debut);
     var h_fin=new Heure(heure_fin);
     if((!h_debut) || (!h_fin)) {
- 	console.log("Heure_debut ou Heure_fin NaN!");
+ 	console.log("[addProg] Heure_debut ou Heure_fin NaN!");
  	return;
     }
 
     if(mode <0 || mode >3) {
-	console.log("Mode "+mode+" incorrect");
+	console.log("[addProg] Mode "+mode+" incorrect");
 	return;
     }
     // check if the program already exists
     var p = exports.searchProgram(prog_name);
-    if(p) {
-	if(p._status=="OK") {
-	    console.log("Le programme "+prog_name+" existe deja!");
-	}
-    } else {
+    if(!p) {
 	p = new Program("programs", prog_name);
 	p._name=prog_name;
 	p._program=new Array(24);
@@ -134,7 +142,7 @@ exports.addProg = function(prog_name, heure_debut, heure_fin, mode) {
     } else if(mode=="Confort") {
 	m = 3;
     } else {
-	console.log("Mode incorrect: '"+mode+"'");
+	console.log("[addProg] Mode incorrect: '"+mode+"'");
 	return;
     }
     for(var i=h_debut.pos; i<h_fin.pos; i++) {
@@ -142,29 +150,3 @@ exports.addProg = function(prog_name, heure_debut, heure_fin, mode) {
     }
     exports.createProgram("programs/"+prog_name, p);
 }
-
-
-// exports.addZone = function(zone_name, pin1, pin2) {
-//     // check if parameters are filled correctly
-//     if(zone_name =="") {
-// 	console.log("zone_name='"+zone_name+"' !");
-// 	return;
-//     }
-//     var p1=parseInt(pin1);
-//     var p2=parseInt(pin2);
-//     if(isNaN(p1) || isNaN(p2)) {
-// 	console.log("pin1 ou pin2 NaN!");
-// 	return;
-//     }
-// 
-//     // check if the zone already exists
-//     var zone = searchZone(zone_name);
-//     if(zone) {
-// 	if(zone._status=="OK") {
-// 	    console.log("La zone "+zone_name+" existe deja!");
-// 	    return;
-// 	}
-//     }
-// 
-//     exports.createZone("zones/"+zone_name, zone_name, p1, p2);
-// }

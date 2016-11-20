@@ -73,6 +73,15 @@ exports.searchProgramSem = function(prog_name) {
     return null;
 }
 
+exports.getTodaysProgram = function(prog_name) {
+    var prog_sem = exports.searchProgramSem(prog_name);
+    if(prog_sem != null) {
+	var jour = (new Date().getDay()+6)%7;
+	return prog_sem._program[jour];
+    }
+    return null;
+}
+
 exports.deleteProgSem = function(prog_name) {
     var prog = exports.searchProgramSem(prog_name);
     if(prog != null) {
@@ -85,27 +94,21 @@ exports.deleteProgSem = function(prog_name) {
 exports.addProgSem = function(prog_name, program) {
     // check if parameters are filled correctly
     if(prog_name =="") {
- 	console.log("prog_name='"+prog_name+"' !");
+ 	console.log("[addProgSem] prog_name='"+prog_name+"' !");
  	return;
     }
 
     for(var i =0; i<7; i++) {
 	var p = programs.searchProgram(program[i]);
 	if(! p) {
-	    console.log("Le programme "+program[i]+" n'existe pas !");
+	    console.log("[addProgSem] Le programme "+program[i]+" n'existe pas !");
 	    return;
-	} else {
-	    console.log("Le programme "+program[i]+" existe !");
 	}
     }
 
     // check if the program already exists
     var p = exports.searchProgramSem(prog_name);
-    if(p) {
-	if(p._status=="OK") {
-	    console.log("Le programme "+prog_name+" existe deja!");
-	}
-    } else {
+    if(!p) {
 	p = new ProgramSem("program_sem", prog_name);
 	p._name=prog_name;
 	p._program=["", "", "", "", "", "", ""];
