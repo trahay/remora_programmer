@@ -19,8 +19,9 @@
 	<% } %>
 	<%= zones[i]._filename %> -
 	<%= zones[i]._name %> -
-	PIN1=<%= zones[i]._pin1 %> -
-	PIN2=<%= zones[i]._pin2 %>
+	PIN1 = <%= zones[i]._pin1 %> -
+	PIN2 = <%= zones[i]._pin2 %> -
+	Program = <%= zones[i]._program %>
       </li>
       <% } %>
     </ul>
@@ -43,6 +44,20 @@
 		   value="<%= selected_zone._pin2 %>"
 		   <% } %>
 		   ><br>
+      Program:
+
+      <select name="program">
+	<% for(var i in programs) { %>
+	<option value="<%= programs[i]._name %>"
+		<% if(typeof selected_zone != 'undefined' && selected_zone) {
+		   if(selected_zone._program == programs[i]._name) {
+		   %>
+		selected
+		<% }
+		   } %>
+		><%= programs[i]._name %></option>
+	<%    } %>
+      </select><br/>
       <input type="submit" value="Submit">
     </form>
 

@@ -5,9 +5,9 @@ var exports = module.exports = {};
 
 function getConfigField(file, field) {
     var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
-    console.log("exec("+cmd+")");
+//    console.log("exec("+cmd+")");
     var result = exec(cmd);
-    console.log("Result : "+result.toString());
+//    console.log("Result : "+result.toString());
     return result;
 }
 
@@ -15,6 +15,7 @@ function print_zone(zone) {
     console.log("Zone name: '"+zone._name+"'");
     console.log("Zone PIN1: '"+zone._pin1+"'");
     console.log("Zone PIN2: '"+zone._pin2+"'");
+    console.log("Zone Program: '"+zone._program+"'");
 }
 
 var Zone = function(dir, filename) {
@@ -33,6 +34,8 @@ var Zone = function(dir, filename) {
     if(isNaN(this._pin2)) {
 	this._status = "KO";
     }
+    this._program = getConfigField(this._full_path, "Program").toString();
+    this._program= this._program.replace(/\n/g, "");
 };
 
 exports.getZones = function(dir, files_) {
@@ -51,25 +54,27 @@ exports.getZones = function(dir, files_) {
 }
 
 exports.searchZone = function(zone_name) {
-    console.log("Searching for "+zone_name);
+//    console.log("Searching for "+zone_name);
     var zones = exports.getZones();
     for( var i in zones ){
-	//console.log("cmp "+zones[i]._name+", "+zone_name);
+//	console.log("cmp '"+zones[i]._name+"', '"+zone_name+"'");
 	print_zone(zones[i]);
 	if(zones[i]._name == zone_name) {
+//	    console.log("-> Trouve !");
 	    return zones[i];
 	}
     }
     return null;
 }
 
-exports.createZone = function(filename, zone_name, pin1, pin2) {
+exports.createZone = function(filename, zone_name, pin1, pin2, program) {
     filename = filename.replace(/ /g, "_");
     console.log("Writing file "+filename);;
     var ws = fs.createWriteStream(filename);
     ws.write("Zone_Name="+zone_name+"\n");
     ws.write("PIN1="+pin1+"\n");
     ws.write("PIN2="+pin2+"\n");
+    ws.write("Program="+program+"\n");
     ws.end();
 }
 
@@ -81,7 +86,7 @@ exports.deleteZone = function(zone_name) {
     }
 }
 
-exports.addZone = function(zone_name, pin1, pin2) {
+exports.addZone = function(zone_name, pin1, pin2, program) {
     // check if parameters are filled correctly
     if(zone_name =="") {
 	console.log("zone_name='"+zone_name+"' !");
@@ -94,5 +99,5 @@ exports.addZone = function(zone_name, pin1, pin2) {
 	return;
     }
 
-    exports.createZone("zones/"+zone_name, zone_name, p1, p2);
+    exports.createZone("zones/"+zone_name, zone_name, p1, p2, program);
 }

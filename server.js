@@ -27,38 +27,46 @@ function sanitize(string) {
 }
 
 
-app.post('/ajouter_zone', function(request, res){
-    var zone_name=sanitize(request.body.zone_name);
-    var pin1=request.body.pin1;
-    var pin2=request.body.pin2;
+function ajouter_zone(req, res){
+    var zone_name=sanitize(req.body.zone_name);
+    var pin1=req.body.pin1;
+    var pin2=req.body.pin2;
+    var program=req.body.program;
 
-    console.log("Nouvelle zone: "+zone_name+ " - pin1="+pin1+ "- pin2="+pin2);
-    zone.addZone(zone_name, pin1, pin2);
-    res.redirect('/afficher_zones');
-});
+    console.log("Nouvelle zone: "+zone_name+ " - pin1="+pin1+ " - pin2="+pin2+" - program="+program);
+    zone.addZone(zone_name, pin1, pin2, program);
+    req.selected_zone=zone;
+    return afficher_zones(req, res);
+}
 
-app.get('/supprime_zone', function(req, res) {
+function supprime_zone(req, res) {
     var zone_name = sanitize(req.query.name);
     console.log("delete zone = "+zone_name);
     zone.deleteZone(zone_name);
+    return afficher_zones(req, res);
+}
 
-    res.redirect('/afficher_zones');
-});
-
-app.get('/edit_zones', function(req, res) {
+function edit_zones(req, res) {
     var zone_name = sanitize(req.query.name);
-    var selected_zone = zone.searchZone(zone_name);
-    console.log("name = "+selected_zone._name);
-    var zones=zone.getZones();
-    var nb_zones=zones.length;
-    res.render('afficher_zones.ejs', {zones: zones, selected_zone:selected_zone});
-});
+    req.selected_zone = zone.searchZone(zone_name);
+    console.log("name = "+req.selected_zone._name);
+    return afficher_zones(req, res);
+}
 
-app.get('/afficher_zones', function(req, res) {
+function afficher_zones(req, res) {
     var zones=zone.getZones();
     var nb_zones=zones.length;
-    res.render('afficher_zones.ejs', {zones: zones});
-});
+
+    var selected_prog=req.selected_prog;
+    var programs=program_sem.getProgramSem();
+    var nb_programs=programs.length;
+    res.render('afficher_zones.ejs',
+	       {zones: zones,
+		selected_zone:req.selected_zone,
+		selected_prog:req.selected_prog,
+		programs:programs,
+		nb_programs:nb_programs});
+}
 
 function ajouter_prog(req, res){
     var prog_name=sanitize(req.body.prog_name);
@@ -144,6 +152,11 @@ function afficher_program_sem(req, res) {
 
     res.render('afficher_program_sem.ejs', {progs: progs, selected_prog:selected_prog, util:util, progs_jour:progs_jour, nb_progs_jour:nb_progs_jour});
 }
+
+app.post('/ajouter_zone', ajouter_zone);
+app.get('/supprime_zone', supprime_zone);
+app.get('/edit_zones', edit_zones);
+app.get('/afficher_zones', afficher_zones);
 
 app.post('/ajouter_prog', ajouter_prog);
 app.get('/supprime_prog', supprime_prog);
