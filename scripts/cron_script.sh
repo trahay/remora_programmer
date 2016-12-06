@@ -3,12 +3,26 @@
 prefix=/home/trahay/Documents/prive/maison/chauffage/serveur
 zone_dir=$prefix/zones
 program_sem_dir=$prefix/program_sem
-program_dir=$prefix/program
+program_dir=$prefix/programs
+
+function set_value {
+    pin1=$1
+    pin2=$2
+    value=$3
+    echo "Setting pins ($pin1,$pin2) to $value"
+}
 
 function get_field {
     field=$1
     file=$2
     grep $field $file |sed 's/^'$field'=//'
+}
+
+function get_cur_hour {
+    hour=$(date "+%H %M")
+    h=$(echo $hour |cut -d" " -f1)
+    m=$(echo $hour |cut -d" " -f2)
+    echo "$h*4+($m/4)"|bc
 }
 
 function get_cur_day {
@@ -35,26 +49,42 @@ function get_program_from_sem {
     get_field Program_$jour $program_file
 }
 
+function get_program_from_day {
+    program=$1
+    hour=$(get_cur_hour)
+    program_file=$program_dir/$program
+    prog=$(get_field Program $program_file)
+    cur_prog=$(echo $prog|cut -c$hour)
+    echo $cur_prog
+}
+
 function get_cur_mode {
     program_sem=$1
     get_program_from_sem $program_sem
 }
 
-function set_program {
+function get_cur_mode_from_program {
     program_sem=$1
-    pin1=$2
-    pin2=$3
 
     mode=$(get_cur_mode $program_sem)
-    echo "Setting mode $mode to pins $pin1 $pin2"
+#    echo "Setting mode $mode to pins $pin1 $pin2"
+#get the current mode (stop, eco, confort, ...)
+    cur_mode=$(get_program_from_day $mode)
+    echo $cur_mode
 }
 
-for zone in $zone_dir/* ; do
-    echo $zone
+function update_program_for_zone {
+    zone=$1
     zone_name=$(get_field Zone_Name $zone)
     zone_pin1=$(get_field PIN1 $zone)
     zone_pin2=$(get_field PIN2 $zone)
     zone_program=$(get_field Program $zone)
-    echo "$zone_name $zone_pin1 $zone_pin2 $zone_program"
-    set_program $zone_program $zone_pin1 $zone_pin2
+    cur_mode=$(get_cur_mode_from_program $zone_program)
+    echo "Setting zone $zone_name to $cur_mode"
+    set_value $pin1 $pin2 $cur_mode
+    echo ""
+}
+
+for zone in $zone_dir/* ; do
+    update_program_for_zone $zone
 done
