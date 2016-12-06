@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+app.use(express.static(__dirname + '/public'));
 
 function sanitize(string) {
     return string.replace(/ /g, "_");
@@ -157,6 +158,7 @@ function afficher_program_sem(req, res) {
 }
 
 app.get('/', index);
+app.get('/index', index);
 
 app.post('/ajouter_zone', ajouter_zone);
 app.get('/supprime_zone', supprime_zone);

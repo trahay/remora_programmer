@@ -1,11 +1,36 @@
-<html>
-  <head>
-    <% include ../partials/head %>
-  </head>
-  <body>
-    <header>
-      <% include ../partials/header %>
-    </header>
+<!DOCTYPE html>
+<% include ../partials/head %>
+<body id="home">
+
+  <!-- header area -->
+  <header class="wrapper clearfix">
+    <div id="banner">
+      <div id="logo"><a href="index"><img src="images/basic-logo.svg" alt="logo"></a></div> 
+    </div>
+
+    <!-- main navigation -->
+    <nav id="topnav" role="navigation">
+      <div class="menu-toggle">Menu</div>  
+      <ul class="srt-menu" id="menu-main-navigation">
+        <li><a href="index">Home</a></li>
+	<li class="current"><a href="afficher_zones">Zones</a></li>
+	<li><a href="afficher_programs">Prog journée</a></li>
+	<li><a href="program_semaine">Prog semaine</a></li>
+      </ul>
+    </nav><!-- #topnav -->
+  </header><!-- end header -->
+
+  <section id="page-header" class="clearfix">    
+    <!-- responsive FlexSlider image slideshow -->
+    <div class="wrapper">
+      <h1>Zones</h1>
+    </div>
+  </section>
+
+  <!-- main content area -->
+  <div class="wrapper" id="main">
+    <!-- content area -->
+    <section id="content">
 
     <p>Voici les <% zones.length %> zones:
     </p>
@@ -61,8 +86,9 @@
       <input type="submit" value="Submit">
     </form>
 
-    <footer>
-      <% include ../partials/footer %>
-    </footer>
-  </body>
+    </section><!-- #end content area -->
+
+  </div><!-- #end div #main .wrapper -->
+  <% include ../partials/footer %>
+</body>
 </html>
