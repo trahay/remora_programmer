@@ -5,6 +5,7 @@ zone_dir=$prefix/zones
 program_sem_dir=$prefix/program_sem
 program_dir=$prefix/programs
 
+# send a value to two pins
 function set_value {
     pin1=$1
     pin2=$2
@@ -18,6 +19,7 @@ function get_field {
     grep $field $file |sed 's/^'$field'=//'
 }
 
+# print the hour
 function get_cur_hour {
     hour=$(date "+%H %M")
     h=$(echo $hour |cut -d" " -f1)
@@ -25,6 +27,7 @@ function get_cur_hour {
     echo "$h*4+($m/4)"|bc
 }
 
+# print the day
 function get_cur_day {
     day=$(date "+%w")
     case $day in
@@ -42,6 +45,7 @@ function get_cur_day {
     echo $jour
 }
 
+# print the current program from a program_sem
 function get_program_from_sem {
     program_sem=$1
     jour=$(get_cur_day)
@@ -49,7 +53,8 @@ function get_program_from_sem {
     get_field Program_$jour $program_file
 }
 
-function get_program_from_day {
+# print the current_mode from a program
+function get_cur_mode_from_day {
     program=$1
     hour=$(get_cur_hour)
     program_file=$program_dir/$program
@@ -58,21 +63,18 @@ function get_program_from_day {
     echo $cur_prog
 }
 
-function get_cur_mode {
-    program_sem=$1
-    get_program_from_sem $program_sem
-}
 
+# print the current mode from a program_sem
 function get_cur_mode_from_program {
     program_sem=$1
 
-    mode=$(get_cur_mode $program_sem)
-#    echo "Setting mode $mode to pins $pin1 $pin2"
-#get the current mode (stop, eco, confort, ...)
-    cur_mode=$(get_program_from_day $mode)
+    mode=$(get_program_from_sem $program_sem)
+# get the current mode (stop, eco, confort, ...)
+    cur_mode=$(get_cur_mode_from_day $mode)
     echo $cur_mode
 }
 
+# set the appropriate program for a zone
 function update_program_for_zone {
     zone=$1
     zone_name=$(get_field Zone_Name $zone)
