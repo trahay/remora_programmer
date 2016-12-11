@@ -5,7 +5,7 @@
   <!-- header area -->
   <header class="wrapper clearfix">
     <div id="banner">
-      <div id="logo"><a href="index"><img src="images/basic-logo.svg" alt="logo"></a></div> 
+      <div id="logo"><a href="index"><img src="styles/images/heater.png" alt="logo"></a></div> 
     </div>
 
     <!-- main navigation -->
@@ -34,22 +34,18 @@
 
     <p>Voici les <% zones.length %> zones:
     </p>
-    <ul>
       <% for(i in zones){ %>
-      <li>
-	<a href="edit_zones?name=<%= zones[i]._name %>">Editer</a>
-	<a href="supprime_zone?name=<%= zones[i]._name %>">Supprimer</a>
+      <div>
+      <a href="edit_zones?name=<%= zones[i]._name %>"><img src="styles/images/edit.png"></a>
+	<a href="supprime_zone?name=<%= zones[i]._name %>"><img src="styles/images/cancel.png"></a>
 	<% if(zones[i]._status != "OK") { %>
 	configuration problem  -
 	<% } %>
-	<%= zones[i]._filename %> -
-	<%= zones[i]._name %> -
-	PIN1 = <%= zones[i]._pin1 %> -
-	PIN2 = <%= zones[i]._pin2 %> -
-	Program = <a href="edit_prog_sem?name=<%= zones[i]._program %>"><%= zones[i]._program %></a>
-      </li>
+	<%= zones[i]._name %>
+	(<%= zones[i]._pin1 %>, <%= zones[i]._pin2 %>)
+	<a href="edit_prog_sem?name=<%= zones[i]._program %>"><%= zones[i]._program %></a>
+	</div>
       <% } %>
-    </ul>
 
     <h1> Ajouter une zone</h1>
     <form method="post" action="ajouter_zone">

@@ -5,7 +5,7 @@
   <!-- header area -->
   <header class="wrapper clearfix">
     <div id="banner">
-      <div id="logo"><a href="index"><img src="images/basic-logo.svg" alt="logo"></a></div> 
+      <div id="logo"><a href="index"><img src="styles/images/heater.png" alt="logo"></a></div> 
     </div>
 
     <!-- main navigation -->
@@ -35,16 +35,14 @@
     <p>Voici les <% progs.length %> programmes:
     </p>
       <% for(i in progs) { %>
-
-      <a href="edit_prog?name=<%= progs[i]._name %>">Editer</a>
-      <a href="supprime_prog?name=<%= progs[i]._name %>">Supprimer</a>
+      <div>
+      <a href="edit_prog?name=<%= progs[i]._name %>"><img src="styles/images/edit.png"></a>
+      <a href="supprime_prog?name=<%= progs[i]._name %>"><img src="styles/images/cancel.png"></a>
       <% if(progs[i]._status != "OK") { %>
 	  configuration problem :
 	  <% }  %>
 
-	  <%= progs[i]._filename %> -
-	  <%= progs[i]._name %>  -
-	  PROGRAM=
+	  <%= progs[i]._name %>
 	<table  cellspacing=0>
 	  <tr>
 	    <% for(j=0; j<24; j++) { %>
@@ -56,8 +54,16 @@
 	       <td class="color_<%= progs[i]._program[j] %>">&nbsp;</td>
 	    <% } %>
 	  </tr>
-	  </table>
+	</table>
+	</div>
 	<% } %>
+
+	<div style="margin-top:30px">
+	<div class="color_0" style="width:50px;float:left;margin-right:10px">&nbsp;</div><div>Arret</div>
+	<div class="color_1" style="width:50px;float:left;margin-right:10px">&nbsp;</div> <div>Hors-gel</div>
+	<div class="color_2" style="width:50px;float:left;margin-right:10px">&nbsp;</div> <div>Eco</div>
+	<div class="color_3" style="width:50px;float:left;margin-right:10px">&nbsp;</div> <div>Confort</div>
+	</div>
 
 	<h1> Ajouter un programme</h1>
  <form method="post" action="ajouter_prog">

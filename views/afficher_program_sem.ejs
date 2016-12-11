@@ -5,7 +5,7 @@
   <!-- header area -->
   <header class="wrapper clearfix">
     <div id="banner">
-      <div id="logo"><a href="index"><img src="images/basic-logo.svg" alt="logo"></a></div> 
+      <div id="logo"><a href="index"><img src="styles/images/heater.png" alt="logo"></a></div> 
     </div>
 
     <!-- main navigation -->
@@ -35,17 +35,14 @@
     <p>Voici les <% progs.length %> programmes:
     </p>
       <% for(i in progs) { %>
-
-      <a href="edit_prog_sem?name=<%= progs[i]._name %>">Editer</a>
-      <a href="supprime_prog_sem?name=<%= progs[i]._name %>">Supprimer</a>
+      <div>
+      <a href="edit_prog_sem?name=<%= progs[i]._name %>"><img src="styles/images/edit.png"></a>
+      <a href="supprime_prog_sem?name=<%= progs[i]._name %>"><img src="styles/images/cancel.png"></a>
       <% if(progs[i]._status != "OK") { %>
 	  configuration problem :
 	  <% }  %>
 
-	  <%= progs[i]._filename %> -
-	  <%= progs[i]._name %>  -
-	  PROGRAM=
-
+	  <%= progs[i]._name %>
 	<table  cellspacing=0>
 	  <tr>
 	    <th>lundi</th>
@@ -64,9 +61,7 @@
 	    <% } %>
 	  </tr>
 	  </table>
-
-	  </tr>
-	  </table>
+      </div>
 	<% } %>
 
 	<h1> Ajouter un programme</h1>
