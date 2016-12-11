@@ -35,16 +35,16 @@
 	<%= today %>
       </p>
 
-      <ul>
+      <div>
 	<% for(i in zones){ %>
-	<li>
-	  <a href="edit_zones?name=<%= zones[i]._name %>"><%= zones[i]._name %></a> -
-	  <a href="edit_prog?name=<%= zones[i]._current_program %>"><%= zones[i]._current_program %></a> -
-	  <a href="edit_prog_sem?name=<%= zones[i]._current_program_sem %>"><%= zones[i]._current_program_sem %></a> -
-	  <span class="color_<%= zones[i]._current_mode %>"><%= zones[i]._current_mode %>&nbsp;</span>
-	</li>
+	<div style="margin-top:10px">
+	    <div class="color_<%= zones[i]._current_mode %>" style="width:50px; margin-right:10px; float:left"><%= zones[i]._current_mode %>&nbsp;</div>
+	    <a href="edit_zones?name=<%= zones[i]._name %>"><%= zones[i]._name %></a> -
+	    <a href="edit_prog?name=<%= zones[i]._current_program %>"><%= zones[i]._current_program %></a> -
+	    <a href="edit_prog_sem?name=<%= zones[i]._current_program_sem %>"><%= zones[i]._current_program_sem %></a>
+	</div>
 	<% } %>
-      </ul>
+      </div>
 
     </section><!-- #end content area -->
 
