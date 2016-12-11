@@ -18,7 +18,7 @@ function set_value {
 function get_field {
     field=$1
     file=$2
-    grep $field $file |sed 's/^'$field'=//'
+    grep "^$field=" $file |sed 's/^'$field'=//'
 }
 
 # print the hour
@@ -26,7 +26,7 @@ function get_cur_hour {
     hour=$(date "+%H %M")
     h=$(echo $hour |cut -d" " -f1)
     m=$(echo $hour |cut -d" " -f2)
-    echo "$h*4+($m/4)"|bc
+    echo "($h*4+($m/4))+1"|bc
 }
 
 # print the day
