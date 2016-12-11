@@ -18,6 +18,19 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
+var fs = require('fs');
+var log_file = fs.createWriteStream(__dirname + '/logs/server.log', {flags : 'a'});
+var log_stdout = process.stdout;
+
+console.log = function(text) { //
+    var d=new Date().toISOString().
+	replace(/T/, ' ').      // replace T with a space
+	replace(/\..+/, '')     // delete the dot and everything after
+
+    log_file.write(d+"\t"+util.format(text) + '\n');
+    log_stdout.write(d+"\t"+util.format(text) + '\n');
+};
+
 function sanitize(string) {
     return string.replace(/ /g, "_");
 }
@@ -181,5 +194,8 @@ app.use(function(req, res, next){
     res.status(404).send('Page introuvable: "'+page+'"');
 });
 
+console.log("");
+console.log("---------------");
+console.log("Server starting");
 
 app.listen(8080);
