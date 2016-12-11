@@ -1,0 +1,145 @@
+%EventDef PajeDefineContainerType 0
+% Name string
+% Type string
+% Alias string
+%EndEventDef
+%EventDef PajeDefineStateType 1
+% Name string
+% Type string
+% Alias string
+%EndEventDef
+%EventDef PajeDefineEventType 2
+% Name string
+% Type string
+% Alias string
+%EndEventDef
+%EventDef PajeDefineVariableType 3
+% Name string
+% Type string
+% Color color
+% Alias string
+%EndEventDef
+%EventDef PajeDefineLinkType 4
+% Name string
+% Type string
+% StartContainerType string
+% EndContainerType string
+% Alias string
+%EndEventDef
+%EventDef PajeDefineEntityValue 5
+% Type string
+% Name string
+% Color color
+% Alias string
+%EndEventDef
+%EventDef PajeCreateContainer 7
+% Time date
+% Name string
+% Type string
+% Container string
+% Alias string
+%EndEventDef
+%EventDef PajeDestroyContainer 8
+% Time date
+% Name string
+% Type string
+%EndEventDef
+%EventDef PajeSetState 10
+% Time date
+% Type string
+% Container string
+% Value string
+%EndEventDef
+%EventDef PajePushState 11
+% Time date
+% Type string
+% Container string
+% Value string
+%EndEventDef
+%EventDef PajePopState 12
+% Time date
+% Type string
+% Container string
+%EndEventDef
+%EventDef PajeResetState 13
+% Time date
+% Type string
+% Container string
+%EndEventDef
+%EventDef PajeNewEvent 20
+% Time date
+% Type string
+% Container string
+% Value string
+%EndEventDef
+%EventDef PajeSetVariable 30
+% Time date
+% Type string
+% Container string
+% Value double
+%EndEventDef
+%EventDef PajeAddVariable 31
+% Time date
+% Type string
+% Container string
+% Value double
+%EndEventDef
+%EventDef PajeSubVariable 32
+% Time date
+% Type string
+% Container string
+% Value double
+%EndEventDef
+%EventDef PajeStartLink 40
+% Time date
+% Type string
+% Container string
+% StartContainer string
+% Value string
+% Key string
+%EndEventDef
+%EventDef PajeEndLink 41
+% Time date
+% Type string
+% Container string
+% EndContainer string
+% Value string
+% Key string
+%EndEventDef
+0 "Radiateur" "0" "CT_Radiateur"
+1 "Radiateur state" "CT_Radiateur" "ST_Radiateur"
+5 "ST_Radiateur" "Arret" "0.4 0.4 0.4" "STV_0"
+5 "ST_Radiateur" "Hors-gel" "0.18 0.6 1.0" "STV_1"
+5 "ST_Radiateur" "Eco" "0.37 0.7 0.0" "STV_2"
+5 "ST_Radiateur" "Confort" "1.0 0.5 0.0" "STV_3"
+2 "Probe" "CT_Radiateur" "E_event"
+7 0.0000000000000e+00 "zone_1" "CT_Radiateur" 0 "zone_1"
+7 0.0000000000000e+00 "zone_18" "CT_Radiateur" 0 "zone_18"
+7 0.0000000000000e+00 "zone_2" "CT_Radiateur" 0 "zone_2"
+10 0.0000000000000e+00 "ST_Radiateur" "zone_1" "STV_0"
+10 0.0000000000000e+00 "ST_Radiateur" "zone_18" "STV_0"
+10 0.0000000000000e+00 "ST_Radiateur" "zone_2" "STV_0"
+11 3 "ST_Radiateur" "zone_1" "STV_3"
+11 3 "ST_Radiateur" "zone_18" "STV_1"
+11 3 "ST_Radiateur" "zone_2" "STV_2"
+11 6 "ST_Radiateur" "zone_1" "STV_3"
+11 6 "ST_Radiateur" "zone_18" "STV_1"
+11 6 "ST_Radiateur" "zone_2" "STV_1"
+20 272 "E_event" "zone_1" "dimanche 11 décembre 2016, 19:01:49 (UTC+0100)"
+11 272 "ST_Radiateur" "zone_1" "STV_3"
+20 272 "E_event" "zone_18" "dimanche 11 décembre 2016, 19:01:49 (UTC+0100)"
+11 272 "ST_Radiateur" "zone_18" "STV_1"
+20 272 "E_event" "zone_2" "dimanche 11 décembre 2016, 19:01:49 (UTC+0100)"
+11 272 "ST_Radiateur" "zone_2" "STV_1"
+20 291 "E_event" "zone_1" "dimanche 11 décembre 2016, 19:02:08 (UTC+0100)"
+11 291 "ST_Radiateur" "zone_1" "STV_3"
+20 291 "E_event" "zone_18" "dimanche 11 décembre 2016, 19:02:08 (UTC+0100)"
+11 291 "ST_Radiateur" "zone_18" "STV_1"
+20 291 "E_event" "zone_2" "dimanche 11 décembre 2016, 19:02:08 (UTC+0100)"
+11 291 "ST_Radiateur" "zone_2" "STV_1"
+20 653 "E_event" "zone_1" "dimanche 11 décembre 2016, 19:08:10 (UTC+0100)"
+11 653 "ST_Radiateur" "zone_1" "STV_3"
+20 653 "E_event" "zone_18" "dimanche 11 décembre 2016, 19:08:10 (UTC+0100)"
+11 653 "ST_Radiateur" "zone_18" "STV_1"
+20 653 "E_event" "zone_2" "dimanche 11 décembre 2016, 19:08:10 (UTC+0100)"
+11 653 "ST_Radiateur" "zone_2" "STV_1"

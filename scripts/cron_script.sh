@@ -4,6 +4,8 @@ prefix=/home/trahay/Documents/prive/maison/chauffage/serveur
 zone_dir=$prefix/zones
 program_sem_dir=$prefix/program_sem
 program_dir=$prefix/programs
+log_file=$prefix/logs/cron.log
+paje_trace_file=$prefix/logs/chauffage.trace
 
 # send a value to two pins
 function set_value {
@@ -74,6 +76,16 @@ function get_cur_mode_from_program {
     echo $cur_mode
 }
 
+function log_paje {
+    zone_name=$1
+    cur_mode=$2
+    d=$(date "+%s")
+    d=$(($d - 1481479037))
+    date_complete=$(date)
+    echo "20 $d \"E_event\" \"$zone_name\" \"$date_complete\"" >> $paje_trace_file
+    echo "11 $d \"ST_Radiateur\" \"$zone_name\" \"STV_${cur_mode}\"" >> $paje_trace_file
+}
+
 # set the appropriate program for a zone
 function update_program_for_zone {
     zone=$1
@@ -83,6 +95,9 @@ function update_program_for_zone {
     zone_program=$(get_field Program $zone)
     cur_mode=$(get_cur_mode_from_program $zone_program)
     echo "Setting zone $zone_name to $cur_mode"
+    d=$(date)
+    echo "[$d] Setting zone $zone_name to $cur_mode" >> $log_file
+    log_paje $zone_name $cur_mode
     set_value $pin1 $pin2 $cur_mode
     echo ""
 }
