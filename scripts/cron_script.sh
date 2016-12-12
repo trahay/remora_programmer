@@ -94,11 +94,12 @@ function update_program_for_zone {
     zone_pin2=$(get_field PIN2 $zone)
     zone_program=$(get_field Program $zone)
     cur_mode=$(get_cur_mode_from_program $zone_program)
-    echo "Setting zone $zone_name to $cur_mode"
+    cur_hour=$(get_cur_hour)
+    echo "Setting zone $zone_name to $cur_mode (cur_hour=$cur_hour)"
     d=$(date)
     echo "[$d] Setting zone $zone_name to $cur_mode" >> $log_file
     log_paje $zone_name $cur_mode
-    set_value $pin1 $pin2 $cur_mode
+    set_value $zone_pin1 $zone_pin2 $cur_mode
     echo ""
 }
 
