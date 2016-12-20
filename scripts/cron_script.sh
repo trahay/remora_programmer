@@ -80,7 +80,7 @@ function log_paje {
     zone_name=$1
     cur_mode=$2
     d=$(date "+%s")
-    d=$(($d - 1481479037))
+    d=$(($d - 1482252008))
     date_complete=$(date)
     echo "20 $d \"E_event\" \"$zone_name\" \"$date_complete\"" >> $paje_trace_file
     echo "11 $d \"ST_Radiateur\" \"$zone_name\" \"STV_${cur_mode}\"" >> $paje_trace_file
