@@ -5,6 +5,14 @@ var bodyParser  = require('body-parser');
 var app = express();
 var util = require('util');
 var path = require('path');
+var fs = require('fs');
+
+
+var morgan = require('morgan');
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), {flags: 'a'});
+app.use(morgan('combined', {stream: accessLogStream}));
+
+
 app.use(auth);
 
 app.set('views', path.join(__dirname, '/views'));
@@ -20,7 +28,6 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-var fs = require('fs');
 var log_file = fs.createWriteStream(__dirname + '/logs/server.log', {flags : 'a'});
 var log_stdout = process.stdout;
 
