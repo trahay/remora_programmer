@@ -2,7 +2,7 @@ var exec = require('child_process').execSync;
 var fs = require('fs');
 
 var exports = module.exports = {};
-var programs=require('./program');
+var programs=require(__dirname +'/program');
 
 var jours=["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
 
@@ -48,7 +48,7 @@ exports.createProgramSem = function(filename, p) {
 }
 
 exports.getProgramSem = function(dir, files_) {
-    dir = dir || "program_sem";
+    dir = dir || __dirname +"/program_sem";
     files_ = files_ || [];
     var files = fs.readdirSync(dir);
     for (var i in files){

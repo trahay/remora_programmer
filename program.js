@@ -36,7 +36,7 @@ exports.createProgram = function(filename, p) {
 }
 
 exports.getPrograms = function(dir, files_) {
-    dir = dir || "programs";
+    dir = dir || __dirname +"/programs";
     files_ = files_ || [];
     var files = fs.readdirSync(dir);
     for (var i in files){

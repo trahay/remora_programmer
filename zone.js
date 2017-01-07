@@ -2,8 +2,8 @@ var exec = require('child_process').execSync;
 var fs = require('fs');
 
 var exports = module.exports = {};
-var progSem=require('./program_sem');
-var progs=require('./program');
+var progSem=require(__dirname +'/program_sem');
+var progs=require(__dirname +'/program');
 
 function getConfigField(file, field) {
     var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
@@ -43,7 +43,7 @@ var Zone = function(dir, filename) {
 };
 
 exports.getZones = function(dir, files_) {
-    dir = dir || "zones";
+    dir = dir || __dirname+"/zones";
     files_ = files_ || [];
     var files = fs.readdirSync(dir);
     for (var i in files){

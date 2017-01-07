@@ -1,6 +1,6 @@
 #!/bin/bash
 
-prefix=/home/trahay/Documents/prive/maison/chauffage/serveur
+prefix=/home/trahay/chauffage/
 zone_dir=$prefix/zones
 program_sem_dir=$prefix/program_sem
 program_dir=$prefix/programs

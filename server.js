@@ -1,15 +1,17 @@
-var auth = require('./auth');
+var auth = require(__dirname +'/auth');
 var express = require('express');
 var url=require('url');
 var bodyParser  = require('body-parser');
 var app = express();
 var util = require('util');
-
+var path = require('path');
 app.use(auth);
 
-var zone=require('./zone');
-var program=require('./program');
-var program_sem=require('./program_sem');
+app.set('views', path.join(__dirname, '/views'));
+
+var zone=require(__dirname +'/zone');
+var program=require(__dirname +'/program');
+var program_sem=require(__dirname +'/program_sem');
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -151,11 +153,11 @@ function edit_prog_sem(req, res) {
 
     var prog_name = sanitize(req.query.name);
     req.selected_prog = program_sem.searchProgramSem(prog_name);
-    if(! req.selected_prog) {
+    if(req.selected_prog == null) {
 	console.log("Cannot find program '"+prog_name+"'");
+    } else {
+	console.log("Edit Program name = "+req.selected_prog._name);
     }
-    console.log("Edit Program name = "+req.selected_prog._name);
-
     return afficher_program_sem(req, res);
 }
 
