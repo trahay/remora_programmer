@@ -12,11 +12,11 @@
     <nav id="topnav" role="navigation">
       <div class="menu-toggle">Menu</div>  
       <ul class="srt-menu" id="menu-main-navigation">
-        <li class="current"><a href="index">Home</a></li>
+        <li><a href="index">Home</a></li>
 	<li><a href="afficher_zones">Zones</a></li>
 	<li><a href="afficher_programs">Prog journée</a></li>
 	<li><a href="program_semaine">Prog semaine</a></li>
-	<li><a href="logs">Logs</a></li>
+	<li class="current"><a href="logs">Logs</a></li>
       </ul>
     </nav><!-- #topnav -->
   </header><!-- end header -->
@@ -24,7 +24,7 @@
   <section id="page-header" class="clearfix">    
     <!-- responsive FlexSlider image slideshow -->
     <div class="wrapper">
-      <h1>Home</h1>
+      <h1>Zones</h1>
     </div>
   </section>
 
@@ -32,21 +32,14 @@
   <div class="wrapper" id="main">
     <!-- content area -->
     <section id="content">
-      <p>
-	<%= today %>
-      </p>
 
-      <div>
-	<% for(i in zones){ %>
-	<div style="margin-top:10px">
-	    <div class="color_<%= zones[i]._current_mode %>" style="width:50px; margin-right:10px; float:left"><%= zones[i]._current_mode %>&nbsp;</div>
-	    <a href="edit_zones?name=<%= zones[i]._name %>"><%= zones[i]._name %></a> -
-	    <a href="edit_prog?name=<%= zones[i]._current_program %>"><%= zones[i]._current_program %></a> -
-	    <a href="edit_prog_sem?name=<%= zones[i]._current_program_sem %>"><%= zones[i]._current_program_sem %></a>
-	</div>
-	<% } %>
-      </div>
 
+      <ul>
+	<li><a href="access.log">access.log</a></li>
+	<li><a href="chauffage.trace">chauffage.trace</a></li>
+	<li><a href="cron.log">cron.log</a></li>
+	<li><a href="server.log">server.log</a></li>
+      </ul>
     </section><!-- #end content area -->
 
   </div><!-- #end div #main .wrapper -->

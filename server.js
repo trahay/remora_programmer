@@ -179,6 +179,10 @@ function afficher_program_sem(req, res) {
     res.render('afficher_program_sem.ejs', {progs: progs, selected_prog:selected_prog, util:util, progs_jour:progs_jour, nb_progs_jour:nb_progs_jour});
 }
 
+function afficher_logs(req, res) {
+    res.render('logs.ejs');
+}
+
 app.get('/', index);
 app.get('/index', index);
 
@@ -196,6 +200,8 @@ app.post('/ajouter_prog_sem', ajouter_prog_sem);
 app.get('/supprime_prog_sem', supprime_prog_sem);
 app.get('/edit_prog_sem', edit_prog_sem);
 app.get('/program_semaine', afficher_program_sem);
+
+app.get('/logs', afficher_logs);
 
 app.use(function(req, res, next){
     var page = url.parse(req.url).pathname;
