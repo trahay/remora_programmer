@@ -199,7 +199,19 @@ app.get('/', (req, res) => {
 app.post('/ajouter_zone', ajouter_zone);
 app.get('/supprime_zone', supprime_zone);
 app.get('/edit_zones', edit_zones);
-app.get('/afficher_zones', afficher_zones);
+app.get('/afficher_zones', (req, res) => {
+
+    db.collection("zones").find().toArray((err, result_zones) =>{
+
+	res.render('afficher_zones.ejs',
+	       {zones: result_zones,
+		selected_zone:"",
+		selected_prog:"",
+		programs:"",
+		nb_programs:""});
+    });
+});
+
 
 app.post('/ajouter_prog', ajouter_prog);
 app.get('/supprime_prog', supprime_prog);
