@@ -35,15 +35,11 @@
 
     <p>Voici les <% progs.length %> programmes:
     </p>
-      <% for(i in progs) { %>
+      <% for(var i=0; i<progs.length; i++) { %>
       <div>
-      <a href="edit_prog?name=<%= progs[i]._name %>"><img src="styles/images/edit.png"></a>
-      <a href="supprime_prog?name=<%= progs[i]._name %>"><img src="styles/images/cancel.png"></a>
-      <% if(progs[i]._status != "OK") { %>
-	  configuration problem :
-	  <% }  %>
-
-	  <%= progs[i]._name %>
+      <a href="edit_prog?id=<%= progs[i]._id %>"><img src="styles/images/edit.png"></a>
+      <a href="supprime_prog?id=<%= progs[i]._id %>"><img src="styles/images/cancel.png"></a>
+	  <%= progs[i].name %>
 	<table  cellspacing=0>
 	  <tr>
 	    <% for(j=0; j<24; j++) { %>
@@ -52,8 +48,8 @@
 	  </tr>
 	  <tr>
 	    <% for(j=0; j<24*4; j++) { %>
-	       <td class="color_<%= progs[i]._program[j] %>">&nbsp;</td>
-	    <% } %>
+	       <td class="color_<%= progs[i].program?progs[i].program[j]:0 %>">&nbsp;</td>
+	       <% } %>
 	  </tr>
 	</table>
 	</div>
@@ -68,9 +64,10 @@
 
 	<h1> Ajouter un programme</h1>
  <form method="post" action="ajouter_prog">
-   Nom du programme: <input type="text" name="prog_name"
+   <input type="hidden", name="id", value="<%= selected_prog._id %>">
+   Nom du programme: <input type="text" name="name"
 			    <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
-			value="<%= selected_prog._name %>"
+			value="<%= selected_prog.name %>"
 			<% } %> /><br/>
 Heure début :
 <select name="heure_debut">

@@ -52,43 +52,6 @@ function sanitize(string) {
     return string.replace(/ /g, "_");
 }
 
-function ajouter_prog(req, res){
-    var prog_name=sanitize(req.body.prog_name);
-    var heure_debut=req.body.heure_debut;
-    var heure_fin=req.body.heure_fin;
-    var mode=req.body.mode;
-    program.addProg(prog_name, heure_debut, heure_fin, mode);
-    req.selected_prog = program.searchProgram(prog_name);
-    return afficher_programs(req, res);
-}
-
-
-function supprime_prog(req, res) {
-    var prog_name = sanitize(req.query.name);
-    console.log("delete prog = "+prog_name);
-    program.deleteProg(prog_name);
-
-    return afficher_programs(req, res);
-}
-
-function edit_prog(req, res) {
-    var prog_name = sanitize(req.query.name);
-    req.selected_prog = program.searchProgram(prog_name);
-    if(! req.selected_prog) {
-	console.log("Cannot find program '"+prog_name+"'");
-    }
-    console.log("Edit Program name = "+req.selected_prog._name);
-    return afficher_programs(req, res);
-}
-
-function afficher_programs(req, res) {
-    var selected_prog=req.selected_prog;
-    var progs=program.getPrograms();
-    var nb_progs=progs.length;
-    res.render('afficher_programs.ejs', {progs: progs, selected_prog:selected_prog, util:util});
- }
-
-
 function ajouter_prog_sem(req, res){
     var prog_name=sanitize(req.body.prog_name);
     var prog = [req.body.lundi,
@@ -223,11 +186,143 @@ app.get('/afficher_zones', (req, res) => {
     });
 });
 
+app.get('/afficher_programs', (req, res) => {
+    db.collection("programme_journee").find().toArray((err, result_prog) => {
+	res.render('afficher_programs.ejs',
+		   {progs: result_prog,
+		    selected_prog:"",
+		    util:util});
 
-app.post('/ajouter_prog', ajouter_prog);
-app.get('/supprime_prog', supprime_prog);
-app.get('/edit_prog', edit_prog);
-app.get('/afficher_programs', afficher_programs);
+    });
+});
+
+function Heure(heure) {
+    var array = heure.toString().match("([0-9][0-9]?):([0-9][0-9]?)");
+    if(! array){
+	console.log("Heure '"+heure+"' incorrecte");
+	return null;
+    }
+
+    this.h=parseInt(array[1]);
+    this.m=parseInt(array[2]);
+
+    if(this.h<0 || this.h>23) {
+	// special processing for 24:00
+	if(this.m != 0 || this.h != 24) {
+	    return null;
+	}
+    }
+    if(this.m<0 || this.m>59) {
+	return null;
+    }
+    this.pos=parseInt(this.h*4+(this.m/15));
+}
+
+function modeToInt(mode) {
+    if (mode == "Arret") {
+	return 0;
+    } else if (mode == "Hors-gel") {
+	return 1;
+    } else if(mode=="Eco") {
+	return 2;
+    } else if(mode=="Confort") {
+	return 3;
+    }
+}
+
+function createProg(start, stop, mode, prog) {
+    var len = 24*4;
+    if(! prog) {
+	prog = [];
+	for(i=0; i<len; i++){
+	    prog.push(0);
+	}
+    }
+    mode=modeToInt(mode);
+    console.log("create progr from "+start+" to "+stop);
+    start=new Heure(start).pos;
+    stop=new Heure(stop).pos;
+    console.log("->from "+start+" to "+stop);
+    for(i=start; i<stop; i++)
+	prog[i]=mode;
+    return prog;
+}
+
+app.post('/ajouter_prog', (req, res) => {
+    if(req.body.id.length == 0) {
+	// new program
+	prog=createProg(req.body.heure_debut, req.body.heure_fin, req.body.mode);
+	db.collection("programme_journee").save(
+	    {
+		"program":prog,
+		"name":req.body.name
+	    }
+	    , (err, results) => {
+	    if (err) return console.log(err);
+	    console.log('saved program '+req.body.name+' to database');
+	    res.redirect('/afficher_programs');
+	    });
+    } else {
+	db.collection("programme_journee").findOne(
+	    { "_id":  ObjectId(req.body.id) },
+	    (err, selected_prog) => {
+		if(err) throw err;
+
+		prog=createProg(req.body.heure_debut, req.body.heure_fin, req.body.mode, selected_prog.program);
+		db.collection("programme_journee").update(
+		    {"_id": ObjectId(req.body.id)},
+		    {
+			"program":prog,
+			"name":req.body.name
+		    })
+		    .then((success) => {
+			console.log('edit program '+req.body.name+' to database');
+			console.log('saved program to database');
+			res.redirect('/edit_prog?id='+req.body.id);
+		    })
+		    .catch((error) => {
+			console.log(error);
+		    });
+
+	    });
+
+    }
+});
+
+app.get('/supprime_prog', (req, res) => {
+    db.collection("programme_journee").remove(
+	{ "_id":  ObjectId(req.query.id) },
+	(err, document) => {
+	    if(err) throw err;
+	    console.log("Programme supprimée: "+req.query.id);
+
+	    res.redirect('/afficher_programs');
+	});
+});
+
+app.get('/edit_prog', (req, res) => {
+
+    db.collection("programme_journee").findOne(
+	{ "_id":  ObjectId(req.query.id) },
+	(err, selected_prog) => {
+	    if(err) throw err;
+	    if(selected_prog == null) {
+		console.log("cannot find "+req.query.id);
+	    } else {
+		if(err) throw err;
+		db.collection("programme_journee").find().toArray((err, result_prog) =>{
+
+		    res.render('afficher_programs.ejs',
+			       {progs: result_prog,
+				selected_prog:selected_prog,
+				util:util});
+		});
+	    }
+	});
+
+});
+
+
 
 app.post('/ajouter_prog_sem', ajouter_prog_sem);
 app.get('/supprime_prog_sem', supprime_prog_sem);
