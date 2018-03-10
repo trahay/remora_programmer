@@ -25,7 +25,7 @@ app.use(auth);
 
 app.set('views', path.join(__dirname, '/views'));
 
-var zone=require(__dirname +'/zone');
+
 var program=require(__dirname +'/program');
 var program_sem=require(__dirname +'/program_sem');
 
@@ -50,51 +50,6 @@ console.log = function(text) { //
 
 function sanitize(string) {
     return string.replace(/ /g, "_");
-}
-
-
-function ajouter_zone(req, res){
-    var zone_name=sanitize(req.body.zone_name);
-    var pin1=req.body.pin1;
-    var pin2=req.body.pin2;
-    var program=req.body.program;
-
-    console.log("add zone: "+zone_name+ " - pin1="+pin1+ " - pin2="+pin2+" - program="+program);
-    zone.addZone(db, zone_name, pin1, pin2, program);
-    req.selected_zone=zone;
-    return afficher_zones(req, res);
-}
-
-function supprime_zone(req, res) {
-    var zone_name = sanitize(req.query.name);
-    console.log("delete zone = "+zone_name);
-    zone.deleteZone(db, zone_name);
-    return afficher_zones(req, res);
-}
-
-function edit_zones(req, res) {
-    var zone_name = sanitize(req.query.name);
-    req.selected_zone = zone.searchZone(db, zone_name);
-    console.log("name = "+req.selected_zone._name);
-    return afficher_zones(req, res);
-}
-
-function afficher_zones(req, res) {
-    if(db=="") {
-	console.log("db is empty!");
-    }
-    var zones=zone.getZones(db);
-    var nb_zones=zones.length;
-    console.log("il y a "+nb_zones+" zones");
-    var selected_prog=req.selected_prog;
-    var programs=program_sem.getProgramSem();
-    var nb_programs=programs.length;
-    res.render('afficher_zones.ejs',
-	       {zones: zones,
-		selected_zone:req.selected_zone,
-		selected_prog:req.selected_prog,
-		programs:programs,
-		nb_programs:nb_programs});
 }
 
 function ajouter_prog(req, res){
