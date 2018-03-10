@@ -47,9 +47,10 @@
 
     <h1> Ajouter une zone</h1>
     <form method="post" action="ajouter_zone">
+      <input type="hidden" value="<%= selected_zone._id %>">
       Zone Name: <input type="text" name="name"
 			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
-			value="<%= selected_zone._id %>"
+			value="<%= selected_zone.name %>"
 			<% } %>
 			>
       <br>

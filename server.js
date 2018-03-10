@@ -7,6 +7,7 @@ var util = require('util');
 var path = require('path');
 var fs = require('fs');
 var db = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 
 db.connect("mongodb://localhost/", function(error, database) {
     if (error) return funcCallback(error);
@@ -205,12 +206,43 @@ app.post('/ajouter_zone', (req, res) => {
     });
 });
 
-app.get('/supprime_zone', supprime_zone);
-app.get('/edit_zones', edit_zones);
+app.get('/edit_zones', (req, res) => {
+
+    db.collection("zones").findOne(
+	{ "_id":  ObjectId(req.query.id) },
+	(err, selected_zone) => {
+	    if(err) throw err;
+	    if(selected_zone == null) {
+		console.log("cannot find "+req.query.id);
+	    } else {
+		if(err) throw err;
+		db.collection("zones").find().toArray((err, result_zones) =>{
+		    res.render('afficher_zones.ejs',
+			       {zones: result_zones,
+				selected_zone:selected_zone,
+				selected_prog:"",
+				programs:"",
+				nb_programs:""});
+		});
+	    }
+	});
+});
+
+app.get('/supprime_zone', (req, res) => {
+    db.collection("zones").remove(
+	{ "_id":  ObjectId(req.query.id) },
+	(err, document) => {
+	    if(err) throw err;
+	    console.log("Zone supprimée: "+req.query.id);
+
+	    res.redirect('/afficher_zones');
+	});
+
+});
+
 app.get('/afficher_zones', (req, res) => {
 
     db.collection("zones").find().toArray((err, result_zones) =>{
-
 	res.render('afficher_zones.ejs',
 	       {zones: result_zones,
 		selected_zone:"",
