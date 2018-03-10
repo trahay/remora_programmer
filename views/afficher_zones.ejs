@@ -35,49 +35,46 @@
 
     <p>Voici les <% zones.length %> zones:
     </p>
-      <% for(i in zones){ %>
+      <% for(var i=0; i< zones.length; i++){ %>
       <div>
-      <a href="edit_zones?name=<%= zones[i]._name %>"><img src="styles/images/edit.png"></a>
-	<a href="supprime_zone?name=<%= zones[i]._name %>"><img src="styles/images/cancel.png"></a>
-	<% if(zones[i]._status != "OK") { %>
-	configuration problem  -
-	<% } %>
-	<%= zones[i]._name %>
-	(<%= zones[i]._pin1 %>, <%= zones[i]._pin2 %>)
-	<a href="edit_prog_sem?name=<%= zones[i]._program %>"><%= zones[i]._program %></a>
+      <a href="edit_zones?id=<%= zones[i]._id %>"><img src="styles/images/edit.png"></a>
+	<a href="supprime_zone?id=<%= zones[i]._id %>"><img src="styles/images/cancel.png"></a>
+	<%= zones[i].name %>
+	(<%= zones[i].pin1 %>, <%= zones[i].pin2 %>)
+	<a href="edit_prog_sem?id=<%= zones[i].program %>"><%= zones[i].program %></a>
 	</div>
       <% } %>
 
     <h1> Ajouter une zone</h1>
     <form method="post" action="ajouter_zone">
-      Zone Name: <input type="text" name="zone_name"
+      Zone Name: <input type="text" name="name"
 			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
-			value="<%= selected_zone._name %>"
+			value="<%= selected_zone._id %>"
 			<% } %>
 			>
       <br>
       PIN1: <input type="text" name="pin1"
 			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
-			value="<%= selected_zone._pin1 %>"
+			value="<%= selected_zone.pin1 %>"
 			<% } %>
 		   ><br>
       PIN2: <input type="text" name="pin2"
 		   <% if(typeof selected_zone != 'undefined' && selected_zone) { %>
-		   value="<%= selected_zone._pin2 %>"
+		   value="<%= selected_zone.pin2 %>"
 		   <% } %>
 		   ><br>
       Program:
 
       <select name="program">
-	<% for(var i in programs) { %>
-	<option value="<%= programs[i]._name %>"
+	<% for(var i=0; i<programs.length; i++) { %>
+	<option value="<%= programs[i]._id %>"
 		<% if(typeof selected_zone != 'undefined' && selected_zone) {
-		   if(selected_zone._program == programs[i]._name) {
+		   if(selected_zone.program == programs[i]._id) {
 		   %>
 		selected
 		<% }
 		   } %>
-		><%= programs[i]._name %></option>
+		><%= programs[i].name %></option>
 	<%    } %>
       </select><br/>
       <input type="submit" value="Submit">

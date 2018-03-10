@@ -196,7 +196,15 @@ app.get('/', (req, res) => {
 });
 
 
-app.post('/ajouter_zone', ajouter_zone);
+app.post('/ajouter_zone', (req, res) => {
+    db.collection("zones").save(req.body, (err, results) => {
+	if (err) return console.log(err);
+	console.log("add zone: "+req.body.name+ " - pin1="+req.body.pin1+ " - pin2="+req.body.pin2+" - program="+req.body.program);
+	console.log('saved zone to database');
+	res.redirect('/afficher_zones');
+    });
+});
+
 app.get('/supprime_zone', supprime_zone);
 app.get('/edit_zones', edit_zones);
 app.get('/afficher_zones', (req, res) => {
