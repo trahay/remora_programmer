@@ -6,7 +6,14 @@ var app = express();
 var util = require('util');
 var path = require('path');
 var fs = require('fs');
+var db = require('mongodb').MongoClient;
 
+db.connect("mongodb://localhost/", function(error, database) {
+    if (error) return funcCallback(error);
+    db=database.db("chauffage");
+
+    console.log("Connecté à la base de données 'chauffage'");
+});;
 
 var morgan = require('morgan');
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), {flags: 'a'});
@@ -45,15 +52,6 @@ function sanitize(string) {
 }
 
 
-function index(req, res) {
-    var d=new Date().toISOString().
-	replace(/T/, ' ').      // replace T with a space
-	replace(/\..+/, '')     // delete the dot and everything after
-
-    var zones=zone.getZones();
-    res.render('index.ejs', {today:d, zones:zones});
-}
-
 function ajouter_zone(req, res){
     var zone_name=sanitize(req.body.zone_name);
     var pin1=req.body.pin1;
@@ -61,7 +59,7 @@ function ajouter_zone(req, res){
     var program=req.body.program;
 
     console.log("add zone: "+zone_name+ " - pin1="+pin1+ " - pin2="+pin2+" - program="+program);
-    zone.addZone(zone_name, pin1, pin2, program);
+    zone.addZone(db, zone_name, pin1, pin2, program);
     req.selected_zone=zone;
     return afficher_zones(req, res);
 }
@@ -69,21 +67,24 @@ function ajouter_zone(req, res){
 function supprime_zone(req, res) {
     var zone_name = sanitize(req.query.name);
     console.log("delete zone = "+zone_name);
-    zone.deleteZone(zone_name);
+    zone.deleteZone(db, zone_name);
     return afficher_zones(req, res);
 }
 
 function edit_zones(req, res) {
     var zone_name = sanitize(req.query.name);
-    req.selected_zone = zone.searchZone(zone_name);
+    req.selected_zone = zone.searchZone(db, zone_name);
     console.log("name = "+req.selected_zone._name);
     return afficher_zones(req, res);
 }
 
 function afficher_zones(req, res) {
-    var zones=zone.getZones();
+    if(db=="") {
+	console.log("db is empty!");
+    }
+    var zones=zone.getZones(db);
     var nb_zones=zones.length;
-
+    console.log("il y a "+nb_zones+" zones");
     var selected_prog=req.selected_prog;
     var programs=program_sem.getProgramSem();
     var nb_programs=programs.length;
@@ -183,8 +184,17 @@ function afficher_logs(req, res) {
     res.render('logs.ejs');
 }
 
-app.get('/', index);
-app.get('/index', index);
+app.get('/', (req, res) => {
+    var d=new Date().toISOString().
+	replace(/T/, ' ').      // replace T with a space
+	replace(/\..+/, '')     // delete the dot and everything after
+
+    db.collection("zones").find().toArray((err, result) =>{
+	if(err) console.log(err);
+	res.render('index.ejs', {today:d, zones:result});
+    });
+});
+
 
 app.post('/ajouter_zone', ajouter_zone);
 app.get('/supprime_zone', supprime_zone);

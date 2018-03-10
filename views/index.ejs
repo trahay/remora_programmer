@@ -5,14 +5,14 @@
   <!-- header area -->
   <header class="wrapper clearfix">
     <div id="banner">
-      <div id="logo"><a href="index"><img src="styles/images/heater.png" alt="logo"></a></div> 
+      <div id="logo"><a href=""><img src="styles/images/heater.png" alt="logo"></a></div> 
     </div>
 
     <!-- main navigation -->
     <nav id="topnav" role="navigation">
       <div class="menu-toggle">Menu</div>  
       <ul class="srt-menu" id="menu-main-navigation">
-        <li class="current"><a href="index">Home</a></li>
+        <li class="current"><a href="">Home</a></li>
 	<li><a href="afficher_zones">Zones</a></li>
 	<li><a href="afficher_programs">Prog journée</a></li>
 	<li><a href="program_semaine">Prog semaine</a></li>
@@ -37,12 +37,12 @@
       </p>
 
       <div>
-	<% for(i in zones){ %>
+	<% for(var i=0; i<zones.length; i++) { %>
 	<div style="margin-top:10px">
 	    <div class="color_<%= zones[i]._current_mode %>" style="width:50px; margin-right:10px; float:left"><%= zones[i]._current_mode %>&nbsp;</div>
-	    <a href="edit_zones?name=<%= zones[i]._name %>"><%= zones[i]._name %></a> -
-	    <a href="edit_prog?name=<%= zones[i]._current_program %>"><%= zones[i]._current_program %></a> -
-	    <a href="edit_prog_sem?name=<%= zones[i]._current_program_sem %>"><%= zones[i]._current_program_sem %></a>
+	    <a href="edit_zones?id=<%= zones[i]._id %>"><%= zones[i].name %></a> -
+	    <a href="edit_prog?id=<%= zones[i].current_program %>"><%= zones[i].current_program %></a> -
+	    <a href="edit_prog_sem?id=<%= zones[i].current_program_sem %>"><%= zones[i].current_program_sem %></a>
 	</div>
 	<% } %>
       </div>

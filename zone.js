@@ -5,60 +5,43 @@ var exports = module.exports = {};
 var progSem=require(__dirname +'/program_sem');
 var progs=require(__dirname +'/program');
 
-function getConfigField(file, field) {
-    var cmd='grep "^'+field+'=" '+ file+' | sed \'s/'+field+'=//\'';
-    var result = exec(cmd);
-    return result;
-}
-
 function print_zone(zone) {
+    console.log("Zone ID: '"+zone._id+"'");
     console.log("Zone name: '"+zone._name+"'");
     console.log("Zone PIN1: '"+zone._pin1+"'");
     console.log("Zone PIN2: '"+zone._pin2+"'");
     console.log("Zone Program: '"+zone._program+"'");
 }
 
-var Zone = function(dir, filename) {
-    this._filename=filename;
-    this._full_path=dir+"/"+filename;
-    this._name = filename;
-    this._status="OK";
-
-    this._name = getConfigField(this._full_path, "Zone_Name").toString();
-    this._name= this._name.replace(/\n/g, "");
-    this._pin1=parseInt(getConfigField(this._full_path, "PIN1"));
-    if(isNaN(this._pin1)) {
-	this._status = "KO";
-    }
-    this._pin2=parseInt(getConfigField(this._full_path, "PIN2"));
-    if(isNaN(this._pin2)) {
-	this._status = "KO";
-    }
-    this._program = getConfigField(this._full_path, "Program").toString();
-    this._program= this._program.replace(/\n/g, "");
-    this._current_program_sem=this._program;;
-    var prog=progSem.getTodaysProgram(this._current_program_sem);
-    this._current_program=prog;
-    this._current_mode=progs.getCurrentProgram(prog);
-};
-
-exports.getZones = function(dir, files_) {
-    dir = dir || __dirname+"/zones";
-    files_ = files_ || [];
-    var files = fs.readdirSync(dir);
-    for (var i in files){
-        var name = dir + '/' + files[i];
-        if (fs.statSync(name).isDirectory()){
-            getFiles(name, files_);
-        } else {
-	    files_.push(new Zone(dir, files[i]));
-        }
-    }
-    return files_;
+var Zone = function(id, name, pin1, pin2, program) {
+    this._id = id;
+    this._name = name;
+    this._pin1 = pin1;
+    this._pin2 = pin2;
+    this._program = program;
 }
 
-exports.searchZone = function(zone_name) {
-    var zones = exports.getZones();
+exports.getZones = function(db) {
+    var zones_ =  [];
+
+    cursor = db.collection("zones").find().each(function(err, obj) {
+	if(err) throw err;
+	if(obj != null) {
+	    // probleme ici: la fonction est asynchrone
+	    zones_.push(new Zone(obj._id,
+				 obj.name,
+				 obj.pin1,
+				 obj.pin2,
+				 obj.program));
+	    console.log("on ajoute"+obj.name+" -> "+zones_.length);
+	}
+    });
+    console.log("IL Y A "+zones_.length+" zones");
+    return zones_;
+}
+
+exports.searchZone = function(db, zone_name) {
+    var zones = exports.getZones(db );
     for( var i in zones ){
 	print_zone(zones[i]);
 	if(zones[i]._name == zone_name) {
@@ -68,26 +51,16 @@ exports.searchZone = function(zone_name) {
     return null;
 }
 
-exports.createZone = function(filename, zone_name, pin1, pin2, program) {
-    filename = filename.replace(/ /g, "_");
-    console.log("Writing file "+filename);;
-    var ws = fs.createWriteStream(filename);
-    ws.write("Zone_Name="+zone_name+"\n");
-    ws.write("PIN1="+pin1+"\n");
-    ws.write("PIN2="+pin2+"\n");
-    ws.write("Program="+program+"\n");
-    ws.end();
+exports.deleteZone = function(db, id) {
+    var MongoObjectID = require("mongodb").ObjectID;
+    var objToFind     = { _id: new MongoObjectID(id) };
+
+    db.collection("zones").remove(objToFind, null, function(error, result) {
+	if (error) throw error;
+    });
 }
 
-exports.deleteZone = function(zone_name) {
-    var zone = exports.searchZone(zone_name);
-    if(zone != null) {
-	console.log("rm "+zone._full_path);
-	fs.unlinkSync(zone._full_path);
-    }
-}
-
-exports.addZone = function(zone_name, pin1, pin2, program) {
+exports.addZone = function(db, zone_name, pin1, pin2, program) {
     // check if parameters are filled correctly
     if(zone_name =="") {
 	console.log("[addZone] zone_name='"+zone_name+"' !");
@@ -100,5 +73,10 @@ exports.addZone = function(zone_name, pin1, pin2, program) {
 	return;
     }
 
-    exports.createZone("zones/"+zone_name, zone_name, p1, p2, program);
+    console.log("Creating zone "+zone_name);
+    var new_zone = {name:zone_name, pin1:pin1, pin2:pin2, program:program};
+    db.collection("zones").insert(new_zone, null, function(error, results) {
+	if(error) throw error;
+	console.log("Ajouté zone '"+zone_name+"'");
+    });
 }
