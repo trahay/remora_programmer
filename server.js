@@ -198,12 +198,28 @@ app.get('/', (req, res) => {
 
 
 app.post('/ajouter_zone', (req, res) => {
-    db.collection("zones").save(req.body, (err, results) => {
+
+    if(req.body.id.length == 0) {
+	// new zone
+	db.collection("zones").save(req.body, (err, results) => {
 	if (err) return console.log(err);
 	console.log("add zone: "+req.body.name+ " - pin1="+req.body.pin1+ " - pin2="+req.body.pin2+" - program="+req.body.program);
 	console.log('saved zone to database');
 	res.redirect('/afficher_zones');
-    });
+	});
+    } else {
+	// edit an existing zone
+
+	db.collection("zones").update({"_id": ObjectId(req.body.id)}, req.body)
+	    .then((success) => {
+		console.log("edit zone: "+req.body.name+ " - pin1="+req.body.pin1+ " - pin2="+req.body.pin2+" - program="+req.body.program);
+		console.log('saved zone to database');
+		res.redirect('/afficher_zones');
+	    })
+	    .catch((error) => {
+		console.log(error);
+	    });
+    }
 });
 
 app.get('/edit_zones', (req, res) => {
