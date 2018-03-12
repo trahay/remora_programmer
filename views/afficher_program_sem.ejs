@@ -32,18 +32,20 @@
   <div class="wrapper" id="main">
     <!-- content area -->
     <section id="content">
-
+      <%
+	var liste_jours=["lundi","mardi","mercredi","jeudi","vendredi","samedi", "dimanche"];
+	%>
     <p>Voici les <% progs.length %> programmes:
     </p>
       <% for(i in progs) { %>
       <div>
-      <a href="edit_prog_sem?name=<%= progs[i]._name %>"><img src="styles/images/edit.png"></a>
-      <a href="supprime_prog_sem?name=<%= progs[i]._name %>"><img src="styles/images/cancel.png"></a>
+      <a href="edit_prog_sem?name=<%= progs[i]._id %>"><img src="styles/images/edit.png"></a>
+      <a href="supprime_prog_sem?name=<%= progs[i]._id %>"><img src="styles/images/cancel.png"></a>
       <% if(progs[i]._status != "OK") { %>
 	  configuration problem :
 	  <% }  %>
 
-	  <%= progs[i]._name %>
+	  <%= progs[i].name %>
 	<table  cellspacing=0>
 	  <tr>
 	    <th>lundi</th>
@@ -55,9 +57,10 @@
 	    <th>dimanche</th>
 	  </tr>
 	  <tr>
-	    <% for(j=0; j<7; j++) { %>
+
+	    < for(j in liste_jours  ) { %>
 	       <td class="color_<%= progs[i]._program[j] %>">
-		 <a href="edit_prog?name=<%= progs[i]._program[j] %>"><%= progs[i]._program[j] %></a>&nbsp;
+		 <a href="edit_prog?name=<%= progs[i].program[j] %>"><%= progs[i].program[j] %></a>&nbsp;
 	       </td>
 	    <% } %>
 	  </tr>
@@ -66,28 +69,25 @@
 	<% } %>
 
 	<h1> Ajouter un programme</h1>
- <form method="post" action="ajouter_prog_sem">
+	<form method="post" action="ajouter_prog_sem">
+	  <input type="hidden" name="id" value="<%= selected_prog._id %>">
    Nom du programme: <input type="text" name="prog_name"
     <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
-			value="<%= selected_prog._name %>"
+			value="<%= selected_prog._id %>"
 			<% } %> /><br/>
-
-    <%
-       var liste_jours=["lundi","mardi","mercredi","jeudi","vendredi","samedi", "dimanche"];
-       for(j in liste_jours  ) { %>
-    <%= liste_jours[j] %>
-<select name="<%= liste_jours[j] %>">
-  <% for(var i in progs_jour) { %>
-  <option value="<%= progs_jour[i]._name %>"
+    <select name="prog_lundi">
+      <% for(var i=0; i<progs_jour.length; i++) { %>
+	 <option value="<%= progs_jour[i]._id %>"
 	  <% if(typeof selected_prog != 'undefined' && selected_prog) {
-	     if(selected_prog._program[j] === progs_jour[i]._name) {
+	     if(selected_prog.prog_lundi === progs_jour[i]._id) {
 	     %>
 			selected
 	  <% }
 	     } %>
-     ><%= progs_jour[i]._name %></option>
-  <%    } %>
-</select><br/>
+	  ><%= progs_jour[i].name %>
+	 </option>
+	 <%    } %>
+    </select><br/>
 <% } %> 
   <input type="submit" value="Submit">
  </form>

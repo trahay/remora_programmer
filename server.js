@@ -324,10 +324,34 @@ app.get('/edit_prog', (req, res) => {
 
 
 
-app.post('/ajouter_prog_sem', ajouter_prog_sem);
+app.post('/ajouter_prog_sem', (req, res) => {
+    if(req.body.id.length == 0) {
+	// new program
+	db.collection("programme_semaine").save(
+	    req.body, (err, results) => {
+	    if (err) return console.log(err);
+	    console.log('saved program_semaine '+req.body.name+' to database');
+	    res.redirect('/program_semaine');
+	    });
+    }
+});
+
 app.get('/supprime_prog_sem', supprime_prog_sem);
 app.get('/edit_prog_sem', edit_prog_sem);
-app.get('/program_semaine', afficher_program_sem);
+
+app.get('/program_semaine', (req, res) => {
+    db.collection("programme_semaine").find().toArray((err, result_prog) => {
+	db.collection("programme_journee").find().toArray((err, progs_jour) => {
+
+	res.render('afficher_program_sem.ejs',
+		   {progs: result_prog,
+		    selected_prog:"",
+		    util:util,
+		    progs_jour:progs_jour});
+	});
+    });
+});
+
 
 app.get('/logs', afficher_logs);
 
