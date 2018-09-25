@@ -103,6 +103,10 @@ function update_program_for_zone {
     echo ""
 }
 
+function get_zones {
+    mongo chauffage --eval "db.zones.find()";    
+}
+
 for zone in $zone_dir/* ; do
     update_program_for_zone $zone
 done
