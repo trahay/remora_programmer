@@ -130,11 +130,10 @@ app.post('/ajouter_zone', (req, res) => {
 	db.collection("zones").save(
 	    {
 		"name":req.body.name,
-		"pin1":req.body.pin1,
-		"pin2":req.body.pin2
+		"url":req.body.url
 	    }, (err, results) => {
 		if (err) return console.log(err);
-		console.log("add zone: "+req.body.name+ " - pin1="+req.body.pin1+ " - pin2="+req.body.pin2+" - program="+req.body.program);
+		console.log("add zone: "+req.body.name+ " - url="+req.body.url+" - program="+req.body.program);
 		console.log('saved zone to database');
 		res.redirect('/afficher_zones');
 	    });
@@ -145,11 +144,10 @@ app.post('/ajouter_zone', (req, res) => {
 	    {"_id": ObjectId(req.body.id)},
 	    {
 		"name":req.body.name,
-		"pin1": req.body.pin1,
-		"pin2": req.body.pin2,
+		"url": req.body.url,
 	    })
 	    .then((success) => {
-		console.log("edit zone: "+req.body.name+ " - pin1="+req.body.pin1+ " - pin2="+req.body.pin2+" - program="+req.body.program);
+		console.log("edit zone: "+req.body.name+ " - url="+req.body.url+" - program="+req.body.program);
 		console.log('saved zone to database');
 		res.redirect('/afficher_zones');
 	    })
@@ -170,13 +168,16 @@ app.get('/edit_zones', (req, res) => {
 	    } else {
 		if(err) throw err;
 		console.log(selected_zone);
-		db.collection("zones").find().toArray((err, result_zones) =>{
-		    res.render('afficher_zones.ejs',
-			       {zones: result_zones,
-				selected_zone:selected_zone,
-				selected_prog:"",
-				programs:"",
-				nb_programs:""});
+		db.collection("programme_semaine").find().toArray((err, programs) => {
+		    if(err) throw err;
+
+		    db.collection("zones").find().toArray((err, result_zones) =>{
+			res.render('afficher_zones.ejs',
+				   {zones: result_zones,
+				    selected_zone:selected_zone,
+				    selected_prog:"",
+				    programs:programs});
+		    });
 		});
 	    }
 	});

@@ -36,13 +36,12 @@
     <p>Voici les <% zones.length %> zones:
     </p>
       <% for(var i=0; i< zones.length; i++){ %>
-      <div>
-      <a href="edit_zones?id=<%= zones[i]._id %>"><img src="styles/images/edit.png"></a>
-	<a href="supprime_zone?id=<%= zones[i]._id %>"><img src="styles/images/cancel.png"></a>
-	<%= zones[i].name %>
-	(<%= zones[i].pin1 %>, <%= zones[i].pin2 %>)
-	<a href="edit_prog_sem?id=<%= zones[i].program %>"><%= zones[i].program %></a>
-	</div>
+	 <div title="<%= zones[i].url %>">
+	   <a href="edit_zones?id=<%= zones[i]._id %>"><img src="styles/images/edit.png"></a>
+	   <a href="supprime_zone?id=<%= zones[i]._id %>"><img src="styles/images/cancel.png"></a>
+	   <%= zones[i].name %>
+	   <a href="edit_prog_sem?id=<%= zones[i].program %>"><%= zones[i].program %></a>
+	 </div>
       <% } %>
 
     <h1> Ajouter une zone</h1>
@@ -54,15 +53,10 @@
 			<% } %>
 			>
       <br>
-      PIN1: <input type="text" name="pin1"
+      URL: <input type="text" name="url"
 			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
-			value="<%= selected_zone.pin1 %>"
+			value="<%= selected_zone.url %>"
 			<% } %>
-		   ><br>
-      PIN2: <input type="text" name="pin2"
-		   <% if(typeof selected_zone != 'undefined' && selected_zone) { %>
-		   value="<%= selected_zone.pin2 %>"
-		   <% } %>
 		   ><br>
       Program:
 
