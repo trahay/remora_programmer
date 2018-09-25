@@ -78,25 +78,34 @@ function supprime_prog_sem(req, res) {
 
 function edit_prog_sem(req, res) {
 
-    var prog_name = sanitize(req.query.name);
-    req.selected_prog = program_sem.searchProgramSem(prog_name);
-    if(req.selected_prog == null) {
-	console.log("Cannot find program '"+prog_name+"'");
-    } else {
-	console.log("Edit Program name = "+req.selected_prog._name);
-    }
-    return afficher_program_sem(req, res);
+    db.collection("programme_semaine").findOne(
+	{ "_id":  ObjectId(req.query.id) },
+	(err, selected_prog) => {
+	    if(err) throw err;
+	    if(selected_prog == null) {
+		console.log("cannot find "+req.query.id);
+		return afficher_program_sem(req, res);
+	    } else {
+		if(err) throw err;
+		req.selected_prog = selected_prog;
+		return afficher_program_sem(req, res);
+	    }
+	});
+
 }
 
 function afficher_program_sem(req, res) {
     var selected_prog=req.selected_prog;
-    var progs=program_sem.getProgramSem();
-    var nb_progs=progs.length;
-
-    var progs_jour=program.getPrograms();
-    var nb_progs_jour=progs_jour.length;
-
-    res.render('afficher_program_sem.ejs', {progs: progs, selected_prog:selected_prog, util:util, progs_jour:progs_jour, nb_progs_jour:nb_progs_jour});
+    db.collection("programme_semaine").find().toArray((err, result_prog) => {
+	db.collection("programme_journee").find().toArray((err, progs_jour) => {
+	    if(err) throw err;
+	    console.log(selected_prog);
+	    res.render('afficher_program_sem.ejs',
+		   {progs: result_prog,
+		    selected_prog:selected_prog,
+		    progs_jour:progs_jour});
+	});
+    });
 }
 
 function afficher_logs(req, res) {
@@ -150,6 +159,7 @@ app.get('/edit_zones', (req, res) => {
 		console.log("cannot find "+req.query.id);
 	    } else {
 		if(err) throw err;
+		console.log(selected_zone);
 		db.collection("zones").find().toArray((err, result_zones) =>{
 		    res.render('afficher_zones.ejs',
 			       {zones: result_zones,
@@ -325,34 +335,46 @@ app.get('/edit_prog', (req, res) => {
 
 
 app.post('/ajouter_prog_sem', (req, res) => {
+    var name=req.body.prog_name;
+    var program=[];
+    program[0]=req.body.prog_0;
+    program[1]=req.body.prog_1;
+    program[2]=req.body.prog_2;
+    program[3]=req.body.prog_3;
+    program[4]=req.body.prog_4;
+    program[5]=req.body.prog_5;
+    program[6]=req.body.prog_6;
+
     if(req.body.id.length == 0) {
 	// new program
-	console.log(req.body);
-	var name=req.body.prog_name;
-	var program=[];
-
-	program[0]=req.body.prog_0;
-	program[1]=req.body.prog_1;
-	program[2]=req.body.prog_2;
-	program[3]=req.body.prog_3;
-	program[4]=req.body.prog_4;
-	program[5]=req.body.prog_5;
-	program[6]=req.body.prog_6;
-	
-	console.log("programm: "+program);
-	
 	db.collection("programme_semaine").save(
 	    {
 		"name":req.body.prog_name,
 		"program":program,
 	    }, (err, results) => {
-	    if (err) return console.log(err);
-	    console.log('saved program_semaine '+req.body.prog_name+' to database');
-	    res.redirect('/program_semaine');
+		if (err) return console.log(err);
+		console.log('saved program_semaine '+req.body.prog_name+' to database');
+		res.redirect('/program_semaine');
+	    });
+	
+    } else {
+	// update
+
+	db.collection("programme_semaine").update(
+	    {"_id": ObjectId(req.body.id)},
+	    {
+		"name":name,
+		"program":program
+	    })
+	    .then((success) => {
+		console.log("edit programme_semaine: "+name+": "+req.body);
+		console.log('saved zone to database');
+		res.redirect('/program_semaine');
+	    })
+	    .catch((error) => {
+		console.log(error);
 	    });
 
-	// TODO: comment stocker un tableau dans une db ?
-	// {_id, _status, name, program["lundi"], program["mardi"], ...;
     }
 });
 
@@ -366,7 +388,6 @@ app.get('/program_semaine', (req, res) => {
 	    res.render('afficher_program_sem.ejs',
 		   {progs: result_prog,
 		    selected_prog:"",
-		    util:util,
 		    progs_jour:progs_jour});
 	});
     });
