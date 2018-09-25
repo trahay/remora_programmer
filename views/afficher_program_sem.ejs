@@ -34,63 +34,66 @@
     <section id="content">
       <%
 	var liste_jours=["lundi","mardi","mercredi","jeudi","vendredi","samedi", "dimanche"];
-	%>
-    <p>Voici les <% progs.length %> programmes:
+      %>
+    <p>Voici les <%= progs.length %> programmes:
     </p>
-      <% for(i in progs) { %>
-      <div>
-      <a href="edit_prog_sem?name=<%= progs[i]._id %>"><img src="styles/images/edit.png"></a>
-      <a href="supprime_prog_sem?name=<%= progs[i]._id %>"><img src="styles/images/cancel.png"></a>
-      <% if(progs[i]._status != "OK") { %>
-	  configuration problem :
-	  <% }  %>
 
-	  <%= progs[i].name %>
-	<table  cellspacing=0>
-	  <tr>
-	    <th>lundi</th>
-	    <th>mardi</th>
-	    <th>mercredi</th>
-	    <th>jeudi</th>
-	    <th>vendredi</th>
-	    <th>samedi</th>
-	    <th>dimanche</th>
-	  </tr>
-	  <tr>
+    <% for(var p=0; p< progs.length; p++) { %>
+	<div>
+	    <a href="edit_prog_sem?name=<%= progs[p]._id %>"><img src="styles/images/edit.png"></a>
+	    <a href="supprime_prog_sem?name=<%= progs[p]._id %>"><img src="styles/images/cancel.png"></a>
+	    <%= progs[p].name %>
+	    <table  cellspacing=0>
+		<tr>
+		    <th>lundi</th>
+		    <th>mardi</th>
+		    <th>mercredi</th>
+		    <th>jeudi</th>
+		    <th>vendredi</th>
+		    <th>samedi</th>
+		    <th>dimanche</th>
+		</tr>
+		<tr>
+		    <% for(var jour=0; jour < liste_jours.length; jour++ ) { %>
+			<td>
+			    <% for(var i=0; i<progs_jour.length; i++) { %>
+				<% if(progs_jour[i]._id ==  progs[p].program[jour]) { %>
+				    <a href="edit_prog?name=<%= progs_jour[i]._id %>"><%= progs_jour[i].name %></a>&nbsp;
+				<% } %>
+			    <% } %>
+			</td>
+		    <% } %>
+		</tr>
+	    </table>
+	</div>
+    <% } %>
 
-	    < for(j in liste_jours  ) { %>
-	       <td class="color_<%= progs[i]._program[j] %>">
-		 <a href="edit_prog?name=<%= progs[i].program[j] %>"><%= progs[i].program[j] %></a>&nbsp;
-	       </td>
-	    <% } %>
-	  </tr>
-	  </table>
-      </div>
-	<% } %>
+      <h1> Ajouter un programme</h1>
+      <form method="post" action="ajouter_prog_sem">
+          <input type="hidden" name="id" value="<%= selected_prog._id %>">
+	  Nom du programme: <input type="text" name="prog_name"
+  <% if(typeof selected_prog != 'undefined' && selected_prog) { %>
+	  <value="<%= selected_prog._id %>"
+  <% } %> /><br/>
 
-	<h1> Ajouter un programme</h1>
-	<form method="post" action="ajouter_prog_sem">
-	  <input type="hidden" name="id" value="<%= selected_prog._id %>">
-   Nom du programme: <input type="text" name="prog_name"
-    <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
-			value="<%= selected_prog._id %>"
-			<% } %> /><br/>
-    <select name="prog_lundi">
-      <% for(var i=0; i<progs_jour.length; i++) { %>
-	 <option value="<%= progs_jour[i]._id %>"
-	  <% if(typeof selected_prog != 'undefined' && selected_prog) {
-	     if(selected_prog.prog_lundi === progs_jour[i]._id) {
-	     %>
-			selected
-	  <% }
-	     } %>
-	  ><%= progs_jour[i].name %>
-	 </option>
-	 <%    } %>
-    </select><br/>
-<% } %> 
-  <input type="submit" value="Submit">
- </form>
+	  <%  for(var jour=0; jour < liste_jours.length; jour++ ) { %>
+	      <div><%= liste_jours[jour] %></div><div>
+	  <select name="prog_<%= jour %>">
+	      <% for(var i=0; i<progs_jour.length; i++) { %>
+		  <option value="<%= progs_jour[i]._id %>"
+			  <% if(typeof selected_prog != 'undefined' && selected_prog) {
+			      if(selected_prog.prog[jour] === progs_jour[i]._id) {
+			  %>
+			  selected
+	      <% }
+	      } %>
+		  ><%= progs_jour[i].name %>
+		  </option>
+          <%    } %>
+	  </select></div><br/>
+	  <% } %>
+	  <input type="submit" value="Submit">
+      </form>
 
     </section><!-- #end content area -->
 

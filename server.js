@@ -327,12 +327,32 @@ app.get('/edit_prog', (req, res) => {
 app.post('/ajouter_prog_sem', (req, res) => {
     if(req.body.id.length == 0) {
 	// new program
+	console.log(req.body);
+	var name=req.body.prog_name;
+	var program=[];
+
+	program[0]=req.body.prog_0;
+	program[1]=req.body.prog_1;
+	program[2]=req.body.prog_2;
+	program[3]=req.body.prog_3;
+	program[4]=req.body.prog_4;
+	program[5]=req.body.prog_5;
+	program[6]=req.body.prog_6;
+	
+	console.log("programm: "+program);
+	
 	db.collection("programme_semaine").save(
-	    req.body, (err, results) => {
+	    {
+		"name":req.body.prog_name,
+		"program":program,
+	    }, (err, results) => {
 	    if (err) return console.log(err);
-	    console.log('saved program_semaine '+req.body.name+' to database');
+	    console.log('saved program_semaine '+req.body.prog_name+' to database');
 	    res.redirect('/program_semaine');
 	    });
+
+	// TODO: comment stocker un tableau dans une db ?
+	// {_id, _status, name, program["lundi"], program["mardi"], ...;
     }
 });
 
@@ -342,8 +362,8 @@ app.get('/edit_prog_sem', edit_prog_sem);
 app.get('/program_semaine', (req, res) => {
     db.collection("programme_semaine").find().toArray((err, result_prog) => {
 	db.collection("programme_journee").find().toArray((err, progs_jour) => {
-
-	res.render('afficher_program_sem.ejs',
+	    if(err) throw err;
+	    res.render('afficher_program_sem.ejs',
 		   {progs: result_prog,
 		    selected_prog:"",
 		    util:util,
