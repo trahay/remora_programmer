@@ -130,7 +130,8 @@ app.post('/ajouter_zone', (req, res) => {
 	db.collection("zones").save(
 	    {
 		"name":req.body.name,
-		"url":req.body.url
+		"url":req.body.url,
+		"program":req.body.program,
 	    }, (err, results) => {
 		if (err) return console.log(err);
 		console.log("add zone: "+req.body.name+ " - url="+req.body.url+" - program="+req.body.program);
@@ -145,6 +146,7 @@ app.post('/ajouter_zone', (req, res) => {
 	    {
 		"name":req.body.name,
 		"url": req.body.url,
+		"program":req.body.program,
 	    })
 	    .then((success) => {
 		console.log("edit zone: "+req.body.name+ " - url="+req.body.url+" - program="+req.body.program);
@@ -198,12 +200,15 @@ app.get('/supprime_zone', (req, res) => {
 app.get('/afficher_zones', (req, res) => {
 
     db.collection("zones").find().toArray((err, result_zones) =>{
-	res.render('afficher_zones.ejs',
-	       {zones: result_zones,
-		selected_zone:"",
-		selected_prog:"",
-		programs:"",
-		nb_programs:""});
+	if(err) throw err;
+	db.collection("programme_semaine").find().toArray((err, programs) => {
+	    if(err) throw err;
+	    res.render('afficher_zones.ejs',
+		       {zones: result_zones,
+			selected_zone:"",
+			selected_prog:"",
+			programs:programs});
+	});
     });
 });
 
@@ -389,7 +394,16 @@ app.post('/ajouter_prog_sem', (req, res) => {
     }
 });
 
-app.get('/supprime_prog_sem', supprime_prog_sem);
+app.get('/supprime_prog_sem', (req, res) => {
+    db.collection("programme_semaine").remove(
+	{ "_id":  ObjectId(req.query.id) },
+	(err, document) => {
+	    if(err) throw err;
+	    console.log("Programme semaine supprimé: "+req.query.id);
+	    return afficher_program_sem(req, res);
+	});
+});
+
 app.get('/edit_prog_sem', edit_prog_sem);
 
 app.get('/program_semaine', (req, res) => {

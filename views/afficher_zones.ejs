@@ -40,7 +40,11 @@
 	   <a href="edit_zones?id=<%= zones[i]._id %>"><img src="styles/images/edit.png"></a>
 	   <a href="supprime_zone?id=<%= zones[i]._id %>"><img src="styles/images/cancel.png"></a>
 	   <%= zones[i].name %>
-	   <a href="edit_prog_sem?id=<%= zones[i].program %>"><%= zones[i].program %></a>
+	   <% for(var j=0; j<programs.length; j++) { %>
+	      <% if(programs[j]._id == zones[i].program) { %>
+	      <a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
+	      <% } %>
+	      <% } %>
 	 </div>
       <% } %>
 
