@@ -119,7 +119,16 @@ app.get('/', (req, res) => {
 
     db.collection("zones").find().toArray((err, result) =>{
 	if(err) console.log(err);
-	res.render('index.ejs', {today:d, zones:result});
+	db.collection("programme_semaine").find().toArray((err, programs) => {
+	    if(err) console.log(err);
+	    db.collection("programme_journee").find().toArray((err, progs_jour) => {
+		if(err) console.log(err);
+		res.render('index.ejs', {today:d,
+					 zones:result,
+					 programs:programs,
+					 progs_jour:progs_jour});
+	    });
+	});
     });
 });
 

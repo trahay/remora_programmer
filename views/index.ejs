@@ -41,10 +41,39 @@
 	<div style="margin-top:10px">
 	    <div class="color_<%= zones[i]._current_mode %>" style="width:50px; margin-right:10px; float:left"><%= zones[i]._current_mode %>&nbsp;</div>
 	    <a href="edit_zones?id=<%= zones[i]._id %>"><%= zones[i].name %></a> -
-	    <a href="edit_prog?id=<%= zones[i].current_program %>"><%= zones[i].current_program %></a> -
-	    <a href="edit_prog_sem?id=<%= zones[i].current_program_sem %>"><%= zones[i].current_program_sem %></a>
+
+	    <% for(var j=0; j<programs.length; j++) { 
+                if(programs[j]._id == zones[i].program) { %>
+		<a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
+		<% var d= new Date();
+		var day=(d.getDay()+1)%7;
+		var program_jour = programs[j].program[day];
+		for(var k=0; k<progs_jour.length; k++ ) { 
+		    if(progs_jour[k]._id == program_jour) {%>
+		    <!-- print the day program -->
+		    <%= progs_jour[k].name %>
+		    <!-- get the heat mode currently in use -->
+		    <%
+		    var h = d.getHours();
+		    var m = d.getMinutes();
+		    var pos = Math.floor(m/15+4*h);
+		    %>
+
+		    <div class="color_<%= progs_jour[k].program[pos] %>" style="width:50px;float:left;margin-right:10px">&nbsp;</td>
+		<% }
+		}
+		%>
+	    <% } %>
+	<% } %>
 	</div>
 	<% } %>
+      </div>
+
+      <div style="margin-top:30px">
+	  <div class="color_0" style="width:50px;float:left;margin-right:10px">&nbsp;</div><div>Arret</div>
+	  <div class="color_1" style="width:50px;float:left;margin-right:10px">&nbsp;</div> <div>Hors-gel</div>
+	  <div class="color_2" style="width:50px;float:left;margin-right:10px">&nbsp;</div> <div>Eco</div>
+	  <div class="color_3" style="width:50px;float:left;margin-right:10px">&nbsp;</div> <div>Confort</div>
       </div>
 
     </section><!-- #end content area -->
