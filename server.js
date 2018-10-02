@@ -25,10 +25,6 @@ app.use(auth);
 
 app.set('views', path.join(__dirname, '/views'));
 
-
-var program=require(__dirname +'/program');
-var program_sem=require(__dirname +'/program_sem');
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
