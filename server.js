@@ -361,15 +361,6 @@ app.get('/edit_prog', (req, res) => {
 
 app.post('/ajouter_prog_sem', (req, res) => {
     var name=req.body.prog_name;
-    var program=[];
-    program[0]=req.body.prog_0;
-    program[1]=req.body.prog_1;
-    program[2]=req.body.prog_2;
-    program[3]=req.body.prog_3;
-    program[4]=req.body.prog_4;
-    program[5]=req.body.prog_5;
-    program[6]=req.body.prog_6;
-
     if(req.body.id.length == 0) {
 	// new program
 	let sql='insert into programme_semaine (name, prog_0, prog_1, prog_2, prog_3, prog_4, prog_5, prog_6) values(?, ?, ?, ?, ?, ?, ?, ?)';

@@ -54,9 +54,19 @@
 		    <th>dimanche</th>
 		</tr>
 		<tr>
-		    <% for(var jour=0; jour < liste_jours.length; jour++ ) { %>
-			<td>
-			    <% for(var i=0; i<progs_jour.length; i++) { %>
+		  <%
+		    progs[p].program=[];
+		    progs[p].program[0]=progs[p].prog_0;
+		    progs[p].program[1]=progs[p].prog_1;
+		    progs[p].program[2]=progs[p].prog_2;
+		    progs[p].program[3]=progs[p].prog_3;
+		    progs[p].program[4]=progs[p].prog_4;
+		    progs[p].program[5]=progs[p].prog_5;
+		    progs[p].program[6]=progs[p].prog_6;
+
+		    for(var jour=0; jour < liste_jours.length; jour++ ) { %>
+		    <td>
+			  <% for(var i=0; i<progs_jour.length; i++) { %>
 				<% if(progs_jour[i].id ==  progs[p].program[jour]) { %>
 				    <a href="edit_prog?id=<%= progs_jour[i].id %>"><%= progs_jour[i].name %></a>&nbsp;
 				<% } %>
@@ -70,7 +80,16 @@
 
     <h1> Ajouter un programme</h1>
     <form method="post" action="ajouter_prog_sem">
-	<% if(typeof selected_prog != 'undefined' && selected_prog) {%>
+      <% if(typeof selected_prog != 'undefined' && selected_prog) {
+	 selected_prog.program=[];
+	 selected_prog.program[0]=selected_prog.prog_0;
+	 selected_prog.program[1]=selected_prog.prog_1;
+	 selected_prog.program[2]=selected_prog.prog_2;
+	 selected_prog.program[3]=selected_prog.prog_3;
+	 selected_prog.program[4]=selected_prog.prog_4;
+	 selected_prog.program[5]=selected_prog.prog_5;
+	 selected_prog.program[6]=selected_prog.prog_6;
+	 %>
             <input type="hidden" name="id" value="<%= selected_prog.id %>">
 	<% } else { %>
 	    <input type="hidden" name="id" value="">

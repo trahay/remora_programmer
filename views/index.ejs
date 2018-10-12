@@ -43,12 +43,21 @@
 	    <a href="edit_zones?id=<%= zones[i].id %>"><%= zones[i].name %></a> -
 
 	    <% for(var j=0; j<programs.length; j++) { 
-                if(programs[j].id == zones[i].program) { %>
-		<a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
-		<% var d= new Date();
-		var day=(d.getDay()+1)%7;
-		var program_jour = programs[j].program[day];
-		for(var k=0; k<progs_jour.length; k++ ) { 
+					       if(programs[j].id == zones[i].program) { %>
+	       <a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
+	       <% var d= new Date();
+		  var day=(d.getDay()+1)%7;
+		  programs[j].program=[];
+		  programs[j].program[0]=programs[j].prog_0;
+		  programs[j].program[1]=programs[j].prog_1;
+		  programs[j].program[2]=programs[j].prog_2;
+		  programs[j].program[3]=programs[j].prog_3;
+		  programs[j].program[4]=programs[j].prog_4;
+		  programs[j].program[5]=programs[j].prog_5;
+		  programs[j].program[6]=programs[j].prog_6;
+
+		   var program_jour = programs[j].program[day];
+		  for(var k=0; k<progs_jour.length; k++ ) { 
 		    if(progs_jour[k].id == program_jour) {%>
 		    <!-- print the day program -->
 		    <%= progs_jour[k].name %>
