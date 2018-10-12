@@ -322,7 +322,7 @@ app.get('/supprime_prog', (req, res) => {
 
 app.get('/edit_prog', (req, res) => {
     let sql='select * from programme_journee where id=?';
-    db.all(sql, req, req.query.id, (err, selected_prog) => {
+    db.all(sql, req.query.id, (err, selected_prog) => {
 	if(err) throw err;
 	if(selected_prog.length == 0) {
 	    console.log("cannot find "+req.query.id);
