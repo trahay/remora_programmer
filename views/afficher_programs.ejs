@@ -37,8 +37,8 @@
     </p>
       <% for(var i=0; i<progs.length; i++) { %>
       <div>
-      <a href="edit_prog?id=<%= progs[i]._id %>"><img src="styles/images/edit.png"></a>
-      <a href="supprime_prog?id=<%= progs[i]._id %>"><img src="styles/images/cancel.png"></a>
+      <a href="edit_prog?id=<%= progs[i].id %>"><img src="styles/images/edit.png"></a>
+      <a href="supprime_prog?id=<%= progs[i].id %>"><img src="styles/images/cancel.png"></a>
 	  <%= progs[i].name %>
 	<table  cellspacing=0>
 	  <tr>
@@ -64,7 +64,7 @@
 
 	<h1> Ajouter un programme</h1>
  <form method="post" action="ajouter_prog">
-   <input type="hidden", name="id", value="<%= selected_prog._id %>">
+   <input type="hidden", name="id", value="<%= selected_prog.id %>">
    Nom du programme: <input type="text" name="name"
 			    <% if(typeof selected_prog != 'undefined' && selected_prog) { %><
 			value="<%= selected_prog.name %>"

@@ -40,16 +40,16 @@
 	<% for(var i=0; i<zones.length; i++) { %>
 	<div style="margin-top:10px">
 	    <div class="color_<%= zones[i]._current_mode %>" style="width:50px; margin-right:10px; float:left"><%= zones[i]._current_mode %>&nbsp;</div>
-	    <a href="edit_zones?id=<%= zones[i]._id %>"><%= zones[i].name %></a> -
+	    <a href="edit_zones?id=<%= zones[i].id %>"><%= zones[i].name %></a> -
 
 	    <% for(var j=0; j<programs.length; j++) { 
-                if(programs[j]._id == zones[i].program) { %>
+                if(programs[j].id == zones[i].program) { %>
 		<a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
 		<% var d= new Date();
 		var day=(d.getDay()+1)%7;
 		var program_jour = programs[j].program[day];
 		for(var k=0; k<progs_jour.length; k++ ) { 
-		    if(progs_jour[k]._id == program_jour) {%>
+		    if(progs_jour[k].id == program_jour) {%>
 		    <!-- print the day program -->
 		    <%= progs_jour[k].name %>
 		    <!-- get the heat mode currently in use -->

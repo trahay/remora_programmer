@@ -21,7 +21,7 @@ create table programme_semaine(
 create table programme_journee(
     id integer primary key,
     name text,
-    program integer);
+    program text);
 
 EOF
 

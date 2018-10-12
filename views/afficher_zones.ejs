@@ -37,11 +37,11 @@
     </p>
       <% for(var i=0; i< zones.length; i++){ %>
 	 <div title="<%= zones[i].url %>">
-	   <a href="edit_zones?id=<%= zones[i]._id %>"><img src="styles/images/edit.png"></a>
-	   <a href="supprime_zone?id=<%= zones[i]._id %>"><img src="styles/images/cancel.png"></a>
+	   <a href="edit_zones?id=<%= zones[i].id %>"><img src="styles/images/edit.png"></a>
+	   <a href="supprime_zone?id=<%= zones[i].id %>"><img src="styles/images/cancel.png"></a>
 	   <%= zones[i].name %>
 	   <% for(var j=0; j<programs.length; j++) { %>
-	      <% if(programs[j]._id == zones[i].program) { %>
+	      <% if(programs[j].id == zones[i].program) { %>
 	      <a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
 	      <% } %>
 	      <% } %>
@@ -50,7 +50,7 @@
 
     <h1> Ajouter une zone</h1>
     <form method="post" action="ajouter_zone">
-      <input type="hidden" name="id" value="<%= selected_zone._id %>">
+      <input type="hidden" name="id" value="<%= selected_zone.id %>">
       Zone Name: <input type="text" name="name"
 			<% if(typeof selected_zone != 'undefined' && selected_zone) { %>
 			value="<%= selected_zone.name %>"
@@ -66,9 +66,9 @@
 
       <select name="program">
 	<% for(var i=0; i<programs.length; i++) { %>
-	<option value="<%= programs[i]._id %>"
+	<option value="<%= programs[i].id %>"
 		<% if(typeof selected_zone != 'undefined' && selected_zone) {
-		   if(selected_zone.program == programs[i]._id) {
+		   if(selected_zone.program == programs[i].id) {
 		   %>
 		selected
 		<% }

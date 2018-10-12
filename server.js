@@ -216,6 +216,7 @@ app.get('/afficher_zones', (req, res) => {
 app.get('/afficher_programs', (req, res) => {
     let sql='select * from programme_journee';
     db.all(sql, [], (err, result_prog) => {
+	console.log(result_prog[0]);
 	res.render('afficher_programs.ejs',
 		   {progs: result_prog,
 		    selected_prog:"",
@@ -260,55 +261,69 @@ function modeToInt(mode) {
 
 function createProg(start, stop, mode, prog) {
     var len = 24*4;
-    if(! prog) {
-	prog = [];
-	for(i=0; i<len; i++){
-	    prog.push(0);
+    p=[];
+    var i=0;
+    if(prog) {
+	for(i=0; i<prog.length; i++){
+	    p.push(prog[i]);
 	}
     }
+    for(; i<len; i++){
+	p.push(0);
+    }
+
     mode=modeToInt(mode);
     console.log("create progr from "+start+" to "+stop);
     start=new Heure(start).pos;
     stop=new Heure(stop).pos;
     console.log("->from "+start+" to "+stop);
     for(i=start; i<stop; i++)
-	prog[i]=mode;
-    return prog.join('');
+	p[i]=mode;
+    return p.join('');
 }
 
 app.post('/ajouter_prog', (req, res) => {
     if(req.body.id.length == 0) {
 	// new program
-	prog=createProg(req.body.heure_debut, req.body.heure_fin, req.body.mode);
-	let sql='insert into programme_journee(program, name) values(?, ?)';
-	db.run(sql, prog, req.body.name, (err) => {
-	    if (err) {
-		console.log("Error while running "+sql+", "+prog+", "+req.body.name);
-		console.log(err);
-		return;
-	    }
-	    console.log('saved program '+req.body.name+' to database');
-	    res.redirect('/afficher_programs');
-	});
-    } else {
-	let sql='select * from programme_journee where id=?';
-	db.all(sql, req.body.id, (err, selected_prog) => {
-	    if(err) throw err;
+	if(req.body.name.length > 0) {
 	    
-	    prog=createProg(req.body.heure_debut, req.body.heure_fin, req.body.mode, selected_prog[0].program);
-	    let sql='update programme_journee set program=?, name=? where id=?';
-	    db.run(sql, prog, req.body.name, req.body.id, (err) => {
-		if(err) {
+	    prog=createProg(req.body.heure_debut, req.body.heure_fin, req.body.mode);
+	    let sql='insert into programme_journee(program, name) values(?, ?)';
+	    db.run(sql, prog, req.body.name, (err) => {
+		if (err) {
+		    console.log("Error while running "+sql+", "+prog+", "+req.body.name);
 		    console.log(err);
-		} else {
-		    console.log('edit program '+req.body.name+' to database');
-		    console.log('saved program to database');
+		    return;
 		}
-		res.redirect('/edit_prog?id='+req.body.id);
+		console.log('saved program '+req.body.name+' to database');
+		res.redirect('/afficher_programs');
 	    });
-	    
-	});
+	    return;
+	}
+    } else {
+	if(req.body.name.length > 0) {
+
+	    let sql='select * from programme_journee where id=?';
+	    db.all(sql, req.body.id, (err, selected_prog) => {
+		if(err) throw err;
+		
+		prog=createProg(req.body.heure_debut, req.body.heure_fin, req.body.mode, selected_prog[0].program);
+		let sql='update programme_journee set program=?, name=? where id=?';
+		db.run(sql, prog, req.body.name, req.body.id, (err) => {
+		    if(err) {
+			console.log(err);
+		    } else {
+			console.log('edit program '+req.body.name+' to database');
+			console.log('saved program to database');
+		    }
+		    res.redirect('/edit_prog?id='+req.body.id);
+		});
+		
+	    });
+	    return;   
+	}
     }
+    res.redirect('/afficher_programs');
 });
 
 app.get('/supprime_prog', (req, res) => {
