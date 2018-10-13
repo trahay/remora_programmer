@@ -12,7 +12,6 @@ cursor=db.cursor();
 def get_program_semaine(id):
     cursor.execute("select * from programme_semaine where id="+str(id));
     p=cursor.fetchone();
-    print(p);
     result={};
     result['id'] = p[0];
     result['name'] = p[1];
@@ -83,7 +82,6 @@ for zone in cursor_zone:
     zone_url=z['url'];      # full url (eg. http://192.168.0.10/fp3)
     zone_url_name=zone_url.split("/")[-1]; # last token (eg. fp3)
     zone_base_url="/".join(zone_url.split("/")[:-1]); # base url (eg. http://192.168.0.10 )
-    print(zone_url_name);
     zone_id=zone_url_name[-1];                        # id (eg. 3)
         
     zone_program=z['program']; 
