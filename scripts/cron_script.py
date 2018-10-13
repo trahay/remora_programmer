@@ -1,26 +1,48 @@
-from pymongo import MongoClient;
+import sqlite3;
 import pprint;
-from bson.objectid import ObjectId;
 import datetime;
 import requests;
 
 weekday=datetime.datetime.today().weekday();
-client = MongoClient('mongodb://localhost/');
-db=client.chauffage;
-programme_semaine = db.programme_semaine;
-programme_journee = db.programme_journee;
-zones = db.zones;
+db=sqlite3.connect("db_chauffage.db");
+cursor=db.cursor();
 
 # The web framework gets post_id from the URL and passes it as a string
 def get_program_semaine(id):
-    # Convert from string to ObjectId:
-    return programme_semaine.find_one({'_id': ObjectId(id)})
+    cursor.execute("select * from programme_semaine where id="+str(id));
+    p=cursor.fetchone();
+    print(p);
+    result={};
+    result['id'] = p[0];
+    result['name'] = p[1];
+    result['program']=[None]*7;
+    result['program'][0] = p[2];
+    result['program'][1] = p[3];
+    result['program'][2] = p[4];
+    result['program'][3] = p[5];
+    result['program'][4] = p[6];
+    result['program'][5] = p[7];
+    result['program'][6] = p[8];
+    return result;
+
 def get_zone(id):
-    # Convert from string to ObjectId:
-    return zones.find_one({'_id': ObjectId(id)})
+    cursor.execute("select * from zones where id="+str(id));
+    p=cursor.fetchone();
+    result={};
+    result['id'] = p[0];
+    result['name'] = p[1];
+    result['url'] = p[2];
+    result['program'] = p[3];
+    return result;
+
 def get_program_journee(id):
-    # Convert from string to ObjectId:
-    return programme_journee.find_one({'_id': ObjectId(id)})
+    cursor.execute("select * from programme_journee where id="+str(id));
+    p=cursor.fetchone();
+    result={};
+    result['id'] = p[0];
+    result['name'] = p[1];
+    result['program'] = p[2];
+    return result;
 
 def get_hour_index():
     hour= datetime.datetime.now().hour;
@@ -46,33 +68,42 @@ def mode(int_mode):
         return "C"
     return ""
 
-for z in zones.find():
-    try:
-        zone_name=z['name'];
-        zone_url=z['url'];      # full url (eg. http://192.168.0.10/fp3)
-        zone_url_name=zone_url.split("/")[-1]; # last token (eg. fp3)
-        zone_base_url="/".join(zone_url.split("/")[:-1]); # base url (eg. http://192.168.0.10 )
-        zone_id=zone_url_name[-1];                        # id (eg. 3)
+
+cursor_zone=db.cursor();
+cursor_zone.execute("select * from zones");
+for zone in cursor_zone:
+    z={};
+    z['id'] = zone[0];
+    z['name'] = zone[1];
+    z['url'] = zone[2];
+    z['program'] = zone[3];
+
+    zone_name=z['name'];
+    zone_url=z['url'];      # full url (eg. http://192.168.0.10/fp3)
+    zone_url_name=zone_url.split("/")[-1]; # last token (eg. fp3)
+    zone_base_url="/".join(zone_url.split("/")[:-1]); # base url (eg. http://192.168.0.10 )
+    print(zone_url_name);
+    zone_id=zone_url_name[-1];                        # id (eg. 3)
         
-        zone_program=z['program']; 
-        program=get_program_semaine(zone_program);
-        program_journee=get_program_journee(program['program'][weekday]);
+    zone_program=z['program']; 
+    program=get_program_semaine(zone_program);
+    program_journee=get_program_journee(program['program'][weekday]);
 
-        cur_program=program_journee['program'][get_hour_index()]; # program to apply
+    cur_program=program_journee['program'][get_hour_index()]; # program to apply
 
-        current_mode=get_current_mode(zone_url); # program currently in use
+    current_mode=get_current_mode(zone_url); # program currently in use
 
-        m = mode(cur_program);
+    m = mode(int(cur_program));
+    req_url=zone_base_url+"?setfp="+zone_id+m;
 
-        req_url=zone_base_url+"?setfp="+zone_id+mode(cur_program);
+    print("Setting zone "+zone_name+" to mode '"+m+ "'\tfull url: "+req_url);
+    
+    response=get_current_mode(req_url);
+    if response['response'] == 0:
+        print("\tOK")
+    else:
+        print(response)
 
-        print("Setting zone "+zone_name+" to mode "+m+ "\tfull url: "+req_url);
 
-        response=get_current_mode(req_url);
-        if response['response'] == 0:
-            print("\tOK")
-        else:
-            print("\tKO")
-    except:
-        print("An error occured !");
 
+db.close
