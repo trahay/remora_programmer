@@ -2,9 +2,10 @@ import sqlite3;
 import pprint;
 import datetime;
 import requests;
+import sys;
 
 weekday=datetime.datetime.today().weekday();
-db=sqlite3.connect("db_chauffage.db");
+db=sqlite3.connect(sys.argv[1]);
 cursor=db.cursor();
 
 # The web framework gets post_id from the URL and passes it as a string
