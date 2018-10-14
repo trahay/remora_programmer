@@ -8,11 +8,12 @@ var path = require('path');
 var fs = require('fs');
 
 const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('./db_chauffage.db', (err) => {
+var db_path=__dirname+'/db_chauffage.db';
+let db = new sqlite3.Database(db_path, (err) => {
   if (err) {
     return console.error(err.message);
   }
-  console.log('Connected to the in-memory SQlite database.');
+  console.log('Connected to the SQlite database '+db_path);
 });
 
 var morgan = require('morgan');
