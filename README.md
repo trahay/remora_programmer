@@ -16,18 +16,55 @@ Ce projet est très mal codé. Il m'a servi à me familiariser des technos web d
 Il faut un Remora installé et connecté au réseau.
    
 A installer:
-    apt-get install nodejs npm
+    apt-get install nodejs npm sqlite3 python-requests
 
 Il faut également installer mongodb. Malheureusement, seule une version très ancienne (2.4) est packagée sous Raspbian stretch. Il faut donc utiliser cette méthode pour installer une version plus récente:
 https://andyfelong.com/2016/01/mongodb-3-0-9-binaries-for-raspberry-pi-2-jessie/
 
 ## Installation
 
-Commencer par récupérer les modules nécessaires:
-    npm installgit@github.com:trahay/remora_programmer.git
+Télécharger remora_programmer:
+    git clone https://github.com/trahay/remora_programmer.git
+
+Installer les modules nodejs nécessaires:
+    npm install .
 
 Changer les identifiants de connexion: éditer le fichier auth.js:
       'JohnDoe': { password: 'SuperSecurePassword' },
 
+Initialiser la base de données:
+   bash ./init_db.sh
+
+## Lancement et initialisation du serveur web
+
 Lancer le serveur web:
     nodejs server.js
+
+Vous pouvez ensuite vous connecter au serveur sur le port 8080.
+
+Sur le site web vous pouvez définir des programmes et les appliquer aux différentes zones
+
+### Définir un programme de journée
+
+Un programme de journée indique pour chaque instant de la journée (avec une granularité de 15 minutes), quel mode (Confort, Eco, Hors-gel ou Arret) utiliser.
+
+Pour définir un programme, donnez lui un nom et pour chaque intervale de temps, indiquez le mode à appliquer.
+
+### Définir un programme de semaine
+
+Un programme de semaine indique, pour chaque jour de la semaine, quel programme de journée appliquer.
+
+### Définir une zone
+
+Pour définir une zone, choisissez un nom, 
+
+Le site web comporte plusieurs parties:
+- index: la page d'accueil qui affiche les différentes zones et le programme en cours pour chacune
+- zones: permet d'éditer les zones
+
+
+
+## Installation du script cron
+
+Installer un cron qui enverra régulièrement les commandes au Remora
+   ./install_cron.sh
