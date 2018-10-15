@@ -32,48 +32,66 @@
   <div class="wrapper" id="main">
     <!-- content area -->
     <section id="content">
-      <p>
-	<%= today %>
-      </p>
+    <%
+var now=new Date();
+var today = now.toLocaleString();
 
-      <div>
-	<% for(var i=0; i<zones.length; i++) { %>
+var cur_day = (now.getDay()+6)%7;
+var cur_hour=parseInt(now.getHours()*4+ now.getMinutes()/15);
+    %>
+    <p> <%= today %> </p>
+    <div>
+    
+    <%
+for(var i=0; i<zones.length; i++) {
+    var program_semaine=zones[i].program;
+    for(var j=0; j<programs.length; j++) {
+	if(programs[j].id == zones[i].program) {
+	    program_semaine=programs[j];
+	    break;
+	}
+    }
+     
+    var program_jour=0;
+    if(cur_day==0)
+	program_jour = program_semaine.prog_0;
+    else if(cur_day == 1)
+	program_jour = program_semaine.prog_1;
+    else if(cur_day == 2)
+	program_jour = program_semaine.prog_2;
+    else if(cur_day == 3)
+	program_jour = program_semaine.prog_3;
+    else if(cur_day == 4)
+	program_jour = program_semaine.prog_4;
+    else if(cur_day == 5)
+	program_jour = program_semaine.prog_5;
+    else if(cur_day == 6)
+	program_jour = program_semaine.prog_6;
+    
+    for(var j=0; j<progs_jour.length; j++) {
+	    if(progs_jour[j].id == program_jour) {
+	    program_jour = progs_jour[j];
+	    break;
+	}
+    }
+    zones[i].current_mode = program_jour.program.charAt(cur_hour);
+    if(zones[i].current_mode==0)
+	zones[i].current_mode_name = "Arret";
+    else if(zones[i].current_mode==1)
+	zones[i].current_mode_name = "Hors-Gel";
+    else if(zones[i].current_mode==2)
+	zones[i].current_mode_name = "Eco";
+    else if(zones[i].current_mode==3)
+	zones[i].current_mode_name = "Confort";
+	%>
+
 	<div style="margin-top:10px">
-	    <div class="color_<%= zones[i]._current_mode %>" style="width:50px; margin-right:10px; float:left"><%= zones[i]._current_mode %>&nbsp;</div>
-	    <a href="edit_zones?id=<%= zones[i].id %>"><%= zones[i].name %></a> -
 
-	    <% for(var j=0; j<programs.length; j++) { 
-					       if(programs[j].id == zones[i].program) { %>
-	       <a href="edit_prog_sem?id=<%= zones[i].program %>"><%= programs[j].name %></a>
-	       <% var d= new Date();
-		  var day=(d.getDay()+1)%7;
-		  programs[j].program=[];
-		  programs[j].program[0]=programs[j].prog_0;
-		  programs[j].program[1]=programs[j].prog_1;
-		  programs[j].program[2]=programs[j].prog_2;
-		  programs[j].program[3]=programs[j].prog_3;
-		  programs[j].program[4]=programs[j].prog_4;
-		  programs[j].program[5]=programs[j].prog_5;
-		  programs[j].program[6]=programs[j].prog_6;
+	<div class="color_<%= zones[i].current_mode %>" style="width:60px; margin-right:10px; float:left"><%= zones[i].current_mode_name %>&nbsp;</div>
 
-		   var program_jour = programs[j].program[day];
-		  for(var k=0; k<progs_jour.length; k++ ) { 
-		    if(progs_jour[k].id == program_jour) {%>
-		    <!-- print the day program -->
-		    <%= progs_jour[k].name %>
-		    <!-- get the heat mode currently in use -->
-		    <%
-		    var h = d.getHours();
-		    var m = d.getMinutes();
-		    var pos = Math.floor(m/15+4*h);
-		    %>
-
-		    <div class="color_<%= progs_jour[k].program[pos] %>" style="width:50px;float:left;margin-right:10px">&nbsp;</td>
-		<% }
-		}
-		%>
-	    <% } %>
-	<% } %>
+	<a href="edit_zones?id=<%= zones[i].id %>"><%= zones[i].name %></a> -
+	<a href="edit_prog_sem?id=<%= program_semaine.id %>"><%= program_semaine.name %></a>
+	<a href="edit_prog?id=<%= program_jour.id %>"><%= program_jour.name %></a>
 	</div>
 	<% } %>
       </div>

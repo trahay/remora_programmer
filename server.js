@@ -43,33 +43,6 @@ console.log = function(text) { //
     log_stdout.write(d+"\t"+util.format(text) + '\n');
 };
 
-function sanitize(string) {
-    return string.replace(/ /g, "_");
-}
-
-function ajouter_prog_sem(req, res){
-    var prog_name=sanitize(req.body.prog_name);
-    var prog = [req.body.lundi,
-		req.body.mardi,
-		req.body.mercredi,
-		req.body.jeudi,
-		req.body.vendredi,
-		req.body.samedi,
-		req.body.dimanche];
-    program_sem.addProgSem(prog_name, prog);
-    req.selected_prog = program_sem.searchProgramSem(prog_name);
-    return afficher_program_sem(req, res);
-}
-
-
-function supprime_prog_sem(req, res) {
-
-    var prog_name = sanitize(req.query.name);
-    console.log("delete prog = "+prog_name);
-    program_sem.deleteProgSem(prog_name);
-
-    return afficher_program_sem(req, res);
-}
 
 function edit_prog_sem(req, res) {
     let sql=`select * from programme_semaine where id=?`;
@@ -108,10 +81,6 @@ function afficher_logs(req, res) {
 }
 
 app.get('/', (req, res) => {
-    var d=new Date().toISOString().
-	replace(/T/, ' ').      // replace T with a space
-	replace(/\..+/, '');     // delete the dot and everything after
-
     let sql_zone=`select * from zones`;
     let sql_prog_sem=`select * from programme_semaine`;
     let sql_prog_jour=`select * from programme_journee`;
@@ -121,8 +90,7 @@ app.get('/', (req, res) => {
 	    if(err) console.log(err);
 	    db.all(sql_prog_jour, [], (err, progs_jour) => {
 		if(err) console.log(err);
-		res.render('index.ejs', {today:d,
-					 zones:result,
+		res.render('index.ejs', {zones:result,
 					 programs:programs,
 					 progs_jour:progs_jour});
 	    });
