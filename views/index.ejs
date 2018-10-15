@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+3<!DOCTYPE html>
 <% include ../partials/head %>
 <body id="home">
 
@@ -40,8 +40,7 @@ var cur_day = (now.getDay()+6)%7;
 var cur_hour=parseInt(now.getHours()*4+ now.getMinutes()/15);
     %>
     <p> <%= today %> </p>
-    <div>
-    
+    <div>    
     <%
 for(var i=0; i<zones.length; i++) {
     var program_semaine=zones[i].program;
@@ -85,13 +84,31 @@ for(var i=0; i<zones.length; i++) {
 	zones[i].current_mode_name = "Confort";
 	%>
 
-	<div style="margin-top:10px">
-
+	<div style="margin-top:20px">
 	<div class="color_<%= zones[i].current_mode %>" style="width:60px; margin-right:10px; float:left"><%= zones[i].current_mode_name %>&nbsp;</div>
 
 	<a href="edit_zones?id=<%= zones[i].id %>"><%= zones[i].name %></a> -
 	<a href="edit_prog_sem?id=<%= program_semaine.id %>"><%= program_semaine.name %></a>
 	<a href="edit_prog?id=<%= program_jour.id %>"><%= program_jour.name %></a>
+
+	<table cellspacing=0>
+	  <tr>
+	    <% for(j=0; j<24; j++) { %>
+	       <th colspan="4" style="align:left"> <%= j %> </th>
+	       <% } %>
+	  </tr>
+	  <tr>
+	    <% for(j=0; j<24*4; j++) {
+		if(j==cur_hour) { %>
+		    <td class="color_<%= program_jour.program[j] %>_selected">&nbsp;</td>
+	         <% } else {%>
+		    <td class="color_<%= program_jour.program[j] %>">&nbsp;</td>
+		 <%}%>
+
+	       <% } %>
+	  </tr>
+	</table>
+
 	</div>
 	<% } %>
       </div>
