@@ -69,6 +69,8 @@ def mode(int_mode):
     return ""
 
 
+print("##################################");
+print(datetime.datetime.today());
 cursor_zone=db.cursor();
 cursor_zone.execute("select * from zones");
 for zone in cursor_zone:
@@ -102,7 +104,6 @@ for zone in cursor_zone:
         print("\tOK")
     else:
         print(response)
-
 
 
 db.close
