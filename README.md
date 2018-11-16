@@ -32,13 +32,13 @@ Installer les modules nodejs nécessaires:
 Changer les identifiants de connexion: éditer le fichier auth.js:
       'JohnDoe': { password: 'SuperSecurePassword' },
 
-Initialiser la base de données:
-   bash ./init_db.sh
+Initialiser tout:
+   bash ./install_remora_programmer.sh
 
 ## Lancement et initialisation du serveur web
 
 Lancer le serveur web:
-    nodejs server.js
+    sudo systemctl restart remora_programmer 
 
 Vous pouvez ensuite vous connecter au serveur sur le port 8080.
 
@@ -61,10 +61,3 @@ Pour définir une zone, choisissez un nom,
 Le site web comporte plusieurs parties:
 - index: la page d'accueil qui affiche les différentes zones et le programme en cours pour chacune
 - zones: permet d'éditer les zones
-
-
-
-## Installation du script cron
-
-Installer un cron qui enverra régulièrement les commandes au Remora
-   ./install_cron.sh
