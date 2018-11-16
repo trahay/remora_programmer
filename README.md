@@ -44,15 +44,21 @@ Vous pouvez ensuite vous connecter au serveur sur le port 8080.
 
 Sur le site web vous pouvez définir des programmes et les appliquer aux différentes zones
 
+![Page d'accueil](https://github.com/trahay/remora_programmer/blob/master/doc/screenshots/home.png)
+
 ### Définir un programme de journée
 
 Un programme de journée indique pour chaque instant de la journée (avec une granularité de 15 minutes), quel mode (Confort, Eco, Hors-gel ou Arret) utiliser.
 
 Pour définir un programme, donnez lui un nom et pour chaque intervale de temps, indiquez le mode à appliquer.
 
+![Définition d'un programme de journée](https://github.com/trahay/remora_programmer/blob/master/doc/screenshots/programme_journee.png)
+
 ### Définir un programme de semaine
 
 Un programme de semaine indique, pour chaque jour de la semaine, quel programme de journée appliquer.
+
+![Définition d'un programme de semaine](https://github.com/trahay/remora_programmer/blob/master/doc/screenshots/programme_semaine.png)
 
 ### Définir une zone
 
@@ -62,6 +68,7 @@ Le site web comporte plusieurs parties:
 - index: la page d'accueil qui affiche les différentes zones et le programme en cours pour chacune
 - zones: permet d'éditer les zones
 
+![Définition d'une zone](https://github.com/trahay/remora_programmer/blob/master/doc/screenshots/zone.png)
 
 
 ## Installation du script cron
