@@ -18,9 +18,6 @@ Il faut un Remora installé et connecté au réseau.
 A installer:
     apt-get install nodejs npm sqlite3 python-requests
 
-Il faut également installer mongodb. Malheureusement, seule une version très ancienne (2.4) est packagée sous Raspbian stretch. Il faut donc utiliser cette méthode pour installer une version plus récente:
-https://andyfelong.com/2016/01/mongodb-3-0-9-binaries-for-raspberry-pi-2-jessie/
-
 ## Installation
 
 Télécharger remora_programmer:

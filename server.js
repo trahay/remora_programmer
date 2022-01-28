@@ -116,7 +116,7 @@ app.post('/ajouter_zone', (req, res) => {
 	let sql='update zones set name=?, url=?, program=? where id=?';
 	db.run(sql, req.body.name, req.body.url, req.body.program, req.body.id, (err) => {
 	    if(err) {
-		console.log(error);
+		console.log(err);
 		return;
 	    }
 	    console.log("edit zone: "+req.body.name+ " - url="+req.body.url+" - program="+req.body.program);
