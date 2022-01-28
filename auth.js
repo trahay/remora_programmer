@@ -2,7 +2,7 @@
 
 var auth = require('basic-auth');
 var admins = {
-  'login': { password: 'password' },
+  'Fuentas': { password: 'FuentasFTW' },
 };
 
 
