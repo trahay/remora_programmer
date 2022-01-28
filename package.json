@@ -11,8 +11,7 @@
     "hashmap": "^2.0.6",
     "mongodb": "^3.0.4",
     "morgan": "^1.7.0",
-    "sprintf-js": "^1.0.3",
-    "sqlite3": "^4.0.2"
+    "sprintf-js": "^1.0.3"
   },
   "devDependencies": {},
   "scripts": {
