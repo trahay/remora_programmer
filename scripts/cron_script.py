@@ -47,7 +47,7 @@ def get_program_journee(id):
 def get_hour_index():
     hour= datetime.datetime.now().hour;
     minute= datetime.datetime.now().minute;
-    return minute/15+4*hour;    
+    return int(minute/15+4*hour);
 
 def get_current_mode(url):
     response=requests.get(url)
@@ -89,7 +89,6 @@ for zone in cursor_zone:
     zone_program=z['program']; 
     program=get_program_semaine(zone_program);
     program_journee=get_program_journee(program['program'][weekday]);
-
     cur_program=program_journee['program'][get_hour_index()]; # program to apply
 
     current_mode=get_current_mode(zone_url); # program currently in use
