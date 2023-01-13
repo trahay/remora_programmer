@@ -7,12 +7,14 @@
     "basic-auth": "^1.1.0",
     "body-parser": "^1.15.2",
     "ejs": "^2.5.1",
-    "express": "^4.14.0",
+    "express": ">=4.17.3"
     "hashmap": "^2.0.6",
     "morgan": "^1.7.0",
     "sprintf-js": "^1.0.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+      "express": ">=4.17.3",
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
