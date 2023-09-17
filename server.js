@@ -1,8 +1,15 @@
 
 var port = 8080;
 if(process.argv.length > 1) {
-    port=process.argv[1];
+    port=process.argv[2];
 }
+
+var log_dir='/var/log/remora_programmer':
+
+var db_path=__dirname+'/db_chauffage.db';
+
+var access_log_path=path.join(log_dir, 'logs/access.log');
+var server_log_path.join(log_dir, 'logs/server.log')
 
 var auth = require(__dirname +'/auth');
 var express = require('express');
@@ -14,7 +21,6 @@ var path = require('path');
 var fs = require('fs');
 
 const sqlite3 = require('sqlite3').verbose();
-var db_path=__dirname+'/db_chauffage.db';
 let db = new sqlite3.Database(db_path, (err) => {
   if (err) {
     return console.error(err.message);
@@ -23,7 +29,7 @@ let db = new sqlite3.Database(db_path, (err) => {
 });
 
 var morgan = require('morgan');
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), {flags: 'a'});
+var accessLogStream = fs.createWriteStream(access_log_path, {flags: 'a'});
 app.use(morgan('combined', {stream: accessLogStream}));
 
 
@@ -38,7 +44,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-var log_file = fs.createWriteStream(__dirname + '/logs/server.log', {flags : 'a'});
+var log_file = fs.createWriteStream(server_log_path, {flags : 'a'});
 var log_stdout = process.stdout;
 
 console.log = function(text) { //
@@ -413,6 +419,6 @@ app.use(function(req, res, next){
 console.log("");
 console.log("---------------");
 console.log("Server starting");
-console.log("  Listenining to port %d...", port);
+console.log("  Listenining to port "+port+"...");
 
 app.listen(port);
