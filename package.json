@@ -1,24 +1,32 @@
 {
-  "name": "remora_programmer",
-  "version": "1.0.0",
-  "description": "A simple programmer for controlling remora",
-  "main": "server.js",
-  "dependencies": {
-    "basic-auth": "^1.1.0",
-    "body-parser": "^1.15.2",
-    "ejs": "^2.5.1",
-    "express": ">=4.17.3"
-    "hashmap": "^2.0.6",
-    "morgan": "^1.7.0",
-    "sprintf-js": "^1.0.3"
-  },
-  "devDependencies": {
-      "express": ">=4.17.3",
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "author": "François Trahay",
-  "license": "ISC"
+    "name": "remora_programmer",
+    "version": "1.0.0",
+    "description": "Un programmateur simple pour Remora.",
+    "main": "server.js",
+    "dependencies": {
+	"basic-auth": "^1.1.0",
+	"body-parser": "^1.15.2",
+	"ejs": "^2.5.1",
+	"express": "^4.17.3",
+	"hashmap": "^2.0.6",
+	"morgan": "^1.7.0",
+	"sprintf-js": "^1.0.3"
+    },
+    "directories": {
+	"doc": "doc"
+    },
+    "scripts": {
+	"test": "echo \"Error: no test specified\" && exit 1",
+	"start": "node server.js"
+    },
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/trahay/remora_programmer.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+	"url": "https://github.com/trahay/remora_programmer/issues"
+    },
+    "homepage": "https://github.com/trahay/remora_programmer#readme"
 }
