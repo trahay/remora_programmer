@@ -1,5 +1,5 @@
 var path = require('path');
-var auth = require(__dirname +'/auth');
+//var auth = require(__dirname +'/auth');
 var express = require('express');
 var url=require('url');
 var bodyParser  = require('body-parser');
@@ -33,7 +33,7 @@ var accessLogStream = fs.createWriteStream(access_log_path, {flags: 'a'});
 app.use(morgan('combined', {stream: accessLogStream}));
 
 
-app.use(auth);
+//app.use(auth);
 
 app.set('views', path.join(__dirname, '/views'));
 
