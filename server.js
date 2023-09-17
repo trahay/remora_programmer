@@ -1,3 +1,9 @@
+
+var port = 8080;
+if(process.argv.length > 1) {
+    port=process.argv[1];
+}
+
 var auth = require(__dirname +'/auth');
 var express = require('express');
 var url=require('url');
@@ -407,5 +413,6 @@ app.use(function(req, res, next){
 console.log("");
 console.log("---------------");
 console.log("Server starting");
+console.log("  Listenining to port %d...", port);
 
-app.listen(8080);
+app.listen(port);
