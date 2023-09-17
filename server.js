@@ -1,3 +1,13 @@
+var path = require('path');
+var auth = require(__dirname +'/auth');
+var express = require('express');
+var url=require('url');
+var bodyParser  = require('body-parser');
+var app = express();
+var util = require('util');
+var fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
+
 
 var port = 8080;
 if(process.argv.length > 1) {
@@ -5,22 +15,12 @@ if(process.argv.length > 1) {
 }
 
 var log_dir='/var/log/remora_programmer';
-
 var db_path=__dirname+'/db_chauffage.db';
 
-var access_log_path=path.join(log_dir, 'logs/access.log');
-var server_log_path.join(log_dir, 'logs/server.log')
+var access_log_path=path.join(log_dir, 'access.log');
+var server_log_path=path.join(log_dir, 'server.log')
 
-var auth = require(__dirname +'/auth');
-var express = require('express');
-var url=require('url');
-var bodyParser  = require('body-parser');
-var app = express();
-var util = require('util');
-var path = require('path');
-var fs = require('fs');
 
-const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database(db_path, (err) => {
   if (err) {
     return console.error(err.message);
