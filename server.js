@@ -4,7 +4,7 @@ if(process.argv.length > 1) {
     port=process.argv[2];
 }
 
-var log_dir='/var/log/remora_programmer':
+var log_dir='/var/log/remora_programmer';
 
 var db_path=__dirname+'/db_chauffage.db';
 
