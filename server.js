@@ -101,7 +101,7 @@ function afficher_logs(req, res) {
     res.render('logs.ejs');
 }
 
-app.get('/', (req, res) => {
+app.get(['/', '/index'], (req, res) => {
     let sql_zone=`select * from zones`;
     let sql_prog_sem=`select * from programme_semaine`;
     let sql_prog_jour=`select * from programme_journee`;
