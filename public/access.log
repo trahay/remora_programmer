@@ -1,1 +1,1 @@
-../logs/access.log
+/var/log/remora_programmer/access.log

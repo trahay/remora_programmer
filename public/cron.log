@@ -1,1 +1,1 @@
-../logs/cron.log
+/var/log/remora_programmer/cron.log
