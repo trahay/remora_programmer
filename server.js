@@ -8,7 +8,6 @@ var util = require('util');
 var fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
-
 var port = 8080;
 if(process.argv.length > 1) {
     port=process.argv[2];
@@ -16,6 +15,7 @@ if(process.argv.length > 1) {
 
 var log_dir='/var/log/remora_programmer';
 var db_path=__dirname+'/db_chauffage.db';
+var baseurl='remora_programmer/';
 
 var access_log_path=path.join(log_dir, 'access.log');
 var server_log_path=path.join(log_dir, 'server.log')
@@ -32,6 +32,14 @@ var morgan = require('morgan');
 var accessLogStream = fs.createWriteStream(access_log_path, {flags: 'a'});
 app.use(morgan('combined', {stream: accessLogStream}));
 
+
+app.use(function(req, res, next) {
+
+    console.log("Rewriting url:"+req.url);
+    req.url = req.url.replace(baseurl, '');
+    console.log("-> now url:"+req.url);
+    next();
+});
 
 //app.use(auth);
 
@@ -413,6 +421,7 @@ app.get('/logs', afficher_logs);
 app.use(function(req, res, next){
     var page = url.parse(req.url).pathname;
     res.setHeader('Content-Type', 'text/plain');
+    console.log(" requested: "+page);
     res.status(404).send('Page introuvable: "'+page+'"');
 });
 
