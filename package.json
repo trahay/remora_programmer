@@ -5,8 +5,8 @@
     "main": "server.js",
     "dependencies": {
 	"basic-auth": "^1.1.0",
-	"body-parser": "^1.15.2",
-	"express": "^4.21.2",
+	"body-parser": "^1.20.4",
+	"express": "^4.22.1",
 	"hashmap": "^2.0.6",
 	"morgan": "^1.10.1",
 	"sprintf-js": "^1.0.3"
